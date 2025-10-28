@@ -1,0 +1,46 @@
+{
+  "name": "@ankamala/ui-libraries",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/richselect",
+    "packages/filter"
+  ],
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^7.1.0",
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@fortawesome/react-fontawesome": "^3.1.0",
+    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-select": "^1.0.0",
+    "@radix-ui/react-slot": "^1.0.0",
+    "@radix-ui/react-switch": "^1.0.0",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "date-fns": "^2.30.0",
+    "dayjs": "1.11.18",
+    "react-day-picker": "^8.10.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.5",
+    "@babel/preset-env": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "@rollup/plugin-babel": "^6.1.0",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/react": "^18.0.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "rollup": "^4.9.6",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-postcss": "^4.0.2"
+  },
+  "scripts": {
+    "build:richselect": "cd richselect && npm run build",
+    "build:filter": "cd filter && npm run build",
+    "build:all": "npm run build:richselect && npm run build:filter"
+  }
+}
