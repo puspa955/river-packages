@@ -11,9 +11,10 @@
   },
   "dependencies": {
     "@ankamala/core": "file:../core",
-    "clsx": "^2.1.1" 
+    "clsx": "^2.1.1"
   },
   "peerDependencies": {
-    "react": "^18.0.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
   }
 }
