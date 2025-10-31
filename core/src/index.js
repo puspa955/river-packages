@@ -1,4 +1,5 @@
 // packages/core/index.js
+import './styles.css';
 
 // Library components
 export { Button } from './library/button';
@@ -20,7 +21,7 @@ export { Switch } from './library/switch';
 export { default as Tooltip } from './library/tooltip';
 export { TooltipProvider } from './library/tooltip';
 export {
-  CommandLibrary as Command,
+  CommandLibrary,
   CommandList,
   CommandInput,
   CommandItem,
@@ -36,4 +37,4 @@ export { Calendar } from './library/calendar';
 export { default as FAIcon } from './components/Icons';
 
 // Utils
-export * from './utils/utils';  // <-- exports all named exports from utils.js
+export * from './utils/utils';  

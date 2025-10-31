@@ -12,8 +12,8 @@ import {
   CommandEmpty,
 } from "@ankamala/core";
 import { cn, Spinner } from "@ankamala/core";
-import FAIcon from "@ankamala/core";
-import Tooltip, { TooltipProvider } from "@ankamala/core";
+import { FAIcon } from "@ankamala/core";
+import { Tooltip, TooltipProvider } from "@ankamala/core";
 
 // Helpers
 const getOptionValue = (option) => (typeof option === "object" ? option.path : option);

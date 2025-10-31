@@ -10,6 +10,7 @@
   "dev": "npx rollup -c ../rollup.config.js -w"
 },
    "dependencies": {
-  "@ankamala/core": "workspace:*"
-}
+    "@ankamala/core": "file:../core",
+    "clsx": "^2.1.1" 
+  }
 }
