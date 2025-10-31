@@ -10,7 +10,7 @@
     "dev": "npx rollup -c ../rollup.config.js -w"
   },
   "dependencies": {
-    "@ankamala/core": "file:../core",
+  "@ankamala/core": "git@github.com:puspa955/core.git#main",
     "clsx": "^2.1.1"
   },
   "peerDependencies": {
