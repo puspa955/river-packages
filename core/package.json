@@ -25,9 +25,5 @@
     "dayjs": "1.11.18",
     "react-day-picker": "^8.10.1",
     "tailwind-merge": "^2.6.0"
-  },
-  "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
   }
 }
