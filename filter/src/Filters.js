@@ -1,5 +1,6 @@
 import FiltersInner from "./Filter";
-import { cn } from "../../core/utils/utils";
+import { cn } from "@ankamala/core";
+
 
 export default function Filters({ className, closePopover, options, filterData, defaultCondition, filters, updateFilters, keysMeta }) {
 

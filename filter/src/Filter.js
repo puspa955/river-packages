@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import FilterGroup, { createCondition, createGroup } from "./FilterGroup";
-import FAIcon from "../../core/components/Icons";
-import { Button } from "../../core/library/button";
+import { FAIcon, Button } from "@ankamala/core"; 
+
 
 const AddButtons = ({ onAddCondition, onAddGroup }) => (
   <div className="flex gap-6">

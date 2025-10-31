@@ -1,17 +1,12 @@
 {
-  "name": "@ankamala/filter",
+  "name": "@ankamala/core",
   "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
   "files": ["dist"],
-  
   "scripts": {
   "build": "npx rollup -c ../rollup.config.js",
   "dev": "npx rollup -c ../rollup.config.js -w"
-},
-  "dependencies": {
-  "@ankamala/core": "workspace:*"
 }
-
 }

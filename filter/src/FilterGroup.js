@@ -1,15 +1,14 @@
 import React from "react";
 import FilterItem from "./FilterItem";
-import FAIcon from "../../core/components/Icons";
-import {
+import { FAIcon, Tooltip } from "@ankamala/core";
+import { 
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
-  SelectItem,
-} from "../../core/library/select";
-import { cn } from "../../core/utils/utils";
-import Tooltip from "../../core/library/tooltip";
+  SelectItem
+} from "@ankamala/core";
+import { cn } from "@ankamala/core";
 
 // Constants
 const MAX_NESTING_LEVEL = 2;

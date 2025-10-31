@@ -2,11 +2,19 @@
 "use client"
 
 import { useState } from "react"; // <- no direct React import for library bundling
-import { Popover, PopoverTrigger, PopoverContent } from "../../core/library/popover";
-import { CommandLibrary, CommandList, CommandItem, CommandGroup, CommandInput, CommandEmpty } from "../../core/library/command";
-import { cn, Spinner } from "../../core/utils/utils";
-import FAIcon from "../../core/components/Icons";
-import Tooltip, { TooltipProvider } from "../../core/library/tooltip";
+import { Popover, PopoverTrigger, PopoverContent } from "@ankamala/core";
+import {
+  CommandLibrary,
+  CommandList,
+  CommandItem,
+  CommandGroup,
+  CommandInput,
+  CommandEmpty,
+} from "@ankamala/core";
+import { cn, Spinner } from "@ankamala/core";
+import FAIcon from "@ankamala/core";
+import Tooltip, { TooltipProvider } from "@ankamala/core";
+
 // Helpers
 const getOptionValue = (option) => (typeof option === "object" ? option.path : option);
 

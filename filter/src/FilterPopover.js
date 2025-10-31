@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { Button } from "../../core/library/button";
-import FAIcon from "../../core/components/Icons";
+import { Button, FAIcon, Popover, PopoverTrigger, PopoverContent, TooltipProvider } from "@ankamala/core";
 import Filters from "./Filters";
-import { Popover, PopoverTrigger, PopoverContent } from "../../core/library/popover";
 import { countConditions } from "../utils/filterUtils";
-import { TooltipProvider } from "../../core/library/tooltip";
+
 
 export default function FilterPopover({ options, filterData, defaultCondition, filters, updateFilters, keysMeta }) {
   const [isPopoverOpen, setPopoverOpen] = useState(false);

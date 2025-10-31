@@ -1,23 +1,9 @@
 import React, { useMemo } from "react";
-import Tooltip from "../../core/library/tooltip";
-import { Switch } from "../../core/library/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  SelectGroup,
-  SelectLabel,
-} from "../../core/library/select";
-
-import FAIcon from "../../core/components/Icons";
-import Input from "../../core/components/Input";
-
+import { Tooltip, Switch, Select, SelectTrigger, SelectValue, SelectContent, SelectItem, SelectGroup, SelectLabel, FAIcon, Input, renderSelectTrigger } from "@ankamala/core";
 import { adjustValueType } from "../utils/filterUtils";
-import { renderSelectTrigger } from "../../core/utils/utils";
 import { DatePicker } from "./DatePicker";
 import RichSelect from "./RichSelect";
+
 
 const operatorMap = {
   number: ["<", ">", "<=", ">="],

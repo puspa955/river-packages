@@ -6,7 +6,10 @@
   "types": "dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
-    "build": "rollup -c ../rollup.config.js",
-    "dev": "rollup -c ../rollup.config.js -w"
-  }
+  "build": "npx rollup -c ../rollup.config.js",
+  "dev": "npx rollup -c ../rollup.config.js -w"
+},
+   "dependencies": {
+  "@ankamala/core": "workspace:*"
+}
 }
