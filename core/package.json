@@ -6,7 +6,27 @@
   "types": "dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
-  "build": "npx rollup -c ../rollup.config.js",
-  "dev": "npx rollup -c ../rollup.config.js -w"
-}
+    "build": "npx rollup -c ../rollup.config.js",
+    "dev": "npx rollup -c ../rollup.config.js -w"
+  },
+  "dependencies": {
+    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-select": "^1.0.0",
+    "@radix-ui/react-slot": "^1.0.0",
+    "@radix-ui/react-switch": "^1.0.0",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "@fortawesome/fontawesome-svg-core": "^7.1.0",
+    "@fortawesome/free-solid-svg-icons": "^7.1.0",
+    "@fortawesome/react-fontawesome": "^3.1.0",
+    "clsx": "^2.1.1",
+    "class-variance-authority": "^0.7.1",
+    "cmdk": "^1.1.1",
+    "date-fns": "^2.30.0",
+    "dayjs": "1.11.18",
+    "react-day-picker": "^8.10.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0"
+  }
 }
