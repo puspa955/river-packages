@@ -128,7 +128,7 @@ const Filter = ({
   return (
     <div className="text-slate-600 w-full">
       <div className="flex items-center gap-2 mb-4">
-        <FAIcon icon="filter" className="text-primary-700" size="lg" />
+        <FAIcon icon="filter" className="text-primary-700" />
         <h2 className="text-lg font-medium text-gray-800">Filter</h2>
       </div>
 

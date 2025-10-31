@@ -38,12 +38,13 @@
     "postcss": "^8.5.6",
     "rollup": "^4.52.5",
     "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-postcss": "^4.0.2"
+    "rollup-plugin-postcss": "^4.0.2",
+    "tailwindcss": "^4.1.16"
   },
- "scripts": {
-  "build:core": "cd core && npx rollup -c ../rollup.config.js",
-  "build:filter": "cd filter && npx rollup -c ../rollup.config.js",
-  "build:richselect": "cd richselect && npx rollup -c ../rollup.config.js",
-  "build:all": "npm run build:core && npm run build:filter && npm run build:richselect"
-}
+  "scripts": {
+    "build:core": "cd core && npx rollup -c ../rollup.config.js",
+    "build:filter": "cd filter && npx rollup -c ../rollup.config.js",
+    "build:richselect": "cd richselect && npx rollup -c ../rollup.config.js",
+    "build:all": "npm run build:core && npm run build:filter && npm run build:richselect"
+  }
 }
