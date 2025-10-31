@@ -12,9 +12,5 @@
   "dependencies": {
    "@ankamala/core": "git@github.com:puspa955/core.git#main",
     "clsx": "^2.1.1"
-  },
-  "peerDependencies": {
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
   }
 }
