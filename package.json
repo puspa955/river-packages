@@ -1,6 +1,20 @@
 {
   "name": "@ankamala/ui-libraries",
   "version": "1.0.0",
+  "exports": {
+    "./filter": {
+      "import": "./filter/dist/index.esm.js",
+      "require": "./filter/dist/index.js"
+    },
+    "./select": {
+      "import": "./richselect/dist/index.esm.js",
+      "require": "./richselect/dist/index.js"
+    }
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
   "private": true,
   "workspaces": [
     "core",
