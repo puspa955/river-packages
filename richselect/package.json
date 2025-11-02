@@ -15,8 +15,5 @@
   },
   "dependencies": {
     "clsx": "^2.1.1"
-  },
-  "devDependencies": {
-    "@ankamala/core": "git@github.com:puspa955/core.git#main"
   }
 }
