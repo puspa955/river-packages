@@ -6,11 +6,17 @@
   "types": "dist/index.d.ts",
   "files": ["dist"],
   "scripts": {
-    "build": "npx rollup -c ../rollup.config.js",
-    "dev": "npx rollup -c ../rollup.config.js -w"
+    "build": "npx rollup -c ../rollup.config.mjs",
+    "dev": "npx rollup -c ../rollup.config.mjs -w"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   },
   "dependencies": {
-  "@ankamala/core": "git@github.com:puspa955/core.git#main",
     "clsx": "^2.1.1"
+  },
+  "devDependencies": {
+    "@ankamala/core": "workspace:*"
   }
 }
