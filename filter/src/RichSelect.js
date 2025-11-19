@@ -60,9 +60,14 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
 };
 
 const RecursiveOptions = ({ options, selected, onOptionSelect, className, multiple, isSmall, optionTooltip }) => {
+  const sortedOptions = options.slice().sort((a, b) => {
+    const labelA = a.label?.toLowerCase() ?? "";
+    const labelB = b.label?.toLowerCase() ?? "";
+    return labelA.localeCompare(labelB);
+  });
   return (
     <div className={cn(className)}>
-      {options.map((option, index) => {
+      {sortedOptions.map((option, index) => {
         if (option.isLoading) {
           return (
             <CommandItem
