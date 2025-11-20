@@ -163,8 +163,8 @@ const FilterItem = ({
               <Switch
                 onCheckedChange={(e) => handleSelectChange("value", !!e)}
                 checked={!!value}
-                className="w-10 h-5 rounded-full border-transparent transition-colors data-[state=checked]:bg-primary-700 data-[state=unchecked]:bg-primary-700/30"
-                thumbStyle="w-4 h-4 bg-white rounded-full shadow-md transform transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+                 className="w-10 h-4.5 rounded-full border-transparent transition-colors data-[state=checked]:bg-primary-700 data-[state=unchecked]:bg-gray-500"
+                 thumbStyle="w-4 h-4 bg-white rounded-full shadow-md transform transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
               />
             </Tooltip>
           </div>
