@@ -13,7 +13,11 @@ export function DatePicker({
   calendarClassName,
   className, 
 }) {
-  const formattedDate = value ? format(value, dateFormat) : "";
+
+  const formattedDate =
+    value instanceof Date && !isNaN(value)
+      ? format(value, dateFormat)
+      : "";
 
   return (
     <Popover>
@@ -26,9 +30,10 @@ export function DatePicker({
             className 
           )}
         >
-          {value ? formattedDate : <span>{placeholder}</span>}
+          {formattedDate || <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
+
       <PopoverContent className="p-0 w-auto" align="start">
         <Calendar
           className={cn("bg-gray-100", calendarClassName)}
@@ -37,10 +42,8 @@ export function DatePicker({
             cell: "h-8 w-8 text-slate-600",
           }}
           mode="single"
-          selected={value}
-          onSelect={(e) => {
-            onChange(e);
-          }}
+          selected={value instanceof Date && !isNaN(value) ? value : undefined}
+          onSelect={(e) => onChange(e)}
           initialFocus
         />
       </PopoverContent>
