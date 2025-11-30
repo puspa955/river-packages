@@ -51,6 +51,13 @@ const FilterItem = ({
     return [];
   }, [filterType, options, key]);
 
+  const dateValue = useMemo(() => {
+    if (filterType === "date" && value) {
+      return adjustValueType(value, "date");
+    }
+    return null;
+  }, [filterType, value]);
+
   const handleSelectChange = (field, value) => {
     let newProperties;
     if (field === "key") {
@@ -149,7 +156,7 @@ const FilterItem = ({
           <DatePicker
             key="date"
             placeholder="Enter a date"
-            value={value}
+            value={dateValue}
             format={"yyyy MMM dd"}
             onChange={(date) => handleSelectChange("value", date)}
             className="w-full text-sm"
