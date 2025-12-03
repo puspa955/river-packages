@@ -7,16 +7,18 @@
   },
   "private": true,
   "workspaces": [
-    "core",
-    "richselect",
-    "filter"
-  ],
+  "core",
+  "filter",
+  "dataset-filter",
+  "richselect"
+],
   "scripts": {
     "build": "npm run build:all",
     "build:core": "cd core && npm run build",
     "build:filter": "cd filter && npm run build",
     "build:richselect": "cd richselect && npm run build",
-    "build:all": "npm run build:core && npm run build:filter && npm run build:richselect",
+    "build:dataset-filter": "cd dataset-filter && npm run build",
+    "build:all": "npm run build:core && npm run build:filter && npm run build:dataset-filter && npm run build:richselect",
     "clean": "rm -rf */dist"
   },
   "dependencies": {
