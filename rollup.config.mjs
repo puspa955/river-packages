@@ -35,6 +35,7 @@ export default {
     'dayjs',
     'react-day-picker',
     'tailwind-merge',
+    '@tanstack/react-query',
   ],
  plugins: [
   peerDepsExternal(),
