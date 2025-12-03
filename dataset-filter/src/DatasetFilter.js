@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback, useEffect } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { FilterPanel } from "./FilterPanel";
 import { SearchHeader } from "./FilterItem";
 import { applyFilters, updateSchemaWithDynamicOptions, decodeFilters, encodeFilters } from "./FilterUtils";
@@ -17,54 +17,24 @@ export const DatasetFilter = ({
   className = ""
 }) => {
   const [filters, setFilters] = useState({});
-  
-  // Try to get QueryClient - will throw if not available
-  let hasQueryClient = true;
-  let queryClient = null;
-  
-  try {
-    queryClient = useQueryClient();
-  } catch (e) {
-    hasQueryClient = false;
-  }
 
-  // Conditionally use useQuery based on whether we have a QueryClient
-  const shouldFetch = !!queryFn && hasQueryClient;
-  
-  const queryResult = useQuery({
+  const { data: fetchedData, isLoading, error } = useQuery({
     queryKey: queryKey || ['dataset'],
-    queryFn: queryFn,
-    enabled: shouldFetch,
+    queryFn: queryFn || (() => Promise.resolve({ data })),
+    enabled: !!queryFn,
     ...queryOptions
   });
 
-  // If no queryFn or no QueryClient, use static data
-  const { data: fetchedData, isLoading, error } = shouldFetch 
-    ? queryResult 
-    : { data: null, isLoading: false, error: null };
+  const sourceData = queryFn ? (dataTransform(fetchedData) || []) : data;
 
-  const sourceData = useMemo(() => {
-    if (shouldFetch && fetchedData) {
-      return dataTransform(fetchedData) || [];
-    }
-    return data;
-  }, [shouldFetch, fetchedData, dataTransform, data]);
+  const updatedSchema = useMemo(() => updateSchemaWithDynamicOptions(schema, sourceData), [schema, sourceData]);
 
-  const updatedSchema = useMemo(() => 
-    updateSchemaWithDynamicOptions(schema, sourceData), 
-    [schema, sourceData]
-  );
-
-  const filteredData = useMemo(() => 
-    applyFilters(sourceData, filters, updatedSchema), 
-    [sourceData, filters, updatedSchema]
-  );
+  const filteredData = useMemo(() => applyFilters(sourceData, filters, updatedSchema), [sourceData, filters, updatedSchema]);
 
   const updateFilter = useCallback((key, value) => {
     setFilters(prev => {
       const newFilters = { ...prev };
-      if (value === undefined || value === null || value === "" || 
-          (Array.isArray(value) && value.length === 0) || value === false) {
+      if (value === undefined || value === null || value === "" || (Array.isArray(value) && value.length === 0) || value === false) {
         delete newFilters[key];
       } else {
         newFilters[key] = value;
@@ -91,7 +61,6 @@ export const DatasetFilter = ({
     params.set("f", encoded);
     window.history.replaceState({}, "", `?${params.toString()}`);
   }, [filters, enableUrlSync]);
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
