@@ -86,6 +86,7 @@ const handlers = {
 };
 
 export const applyFilters = (data, filters, schema) => {
+  // FIX: Guard against non-array data
   if (!Array.isArray(data) || !data.length) return [];
   if (!filters || !Object.keys(filters).length) return data;
 
@@ -118,6 +119,7 @@ export const applyFilters = (data, filters, schema) => {
 };
 
 export const extractDynamicOptions = (data, schema) => {
+  // FIX: Guard against non-array data at the start
   if (!Array.isArray(data) || !data.length) return {};
   
   const { flat } = flattenSchema(schema);
@@ -146,10 +148,12 @@ export const extractDynamicOptions = (data, schema) => {
 };
 
 export const updateSchemaWithDynamicOptions = (schema, data) => {
+  // CRITICAL FIX: Ensure data is array before passing to extractDynamicOptions
   if (!Array.isArray(data)) {
     data = [];
   }
   
+  // CRITICAL FIX: Pass arguments in CORRECT order (data, schema)
   const dynamicOptions = extractDynamicOptions(data, schema);
 
   const update = (obj) => {
