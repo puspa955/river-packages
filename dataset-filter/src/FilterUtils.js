@@ -8,17 +8,27 @@ export const getNestedValue = (obj, path) => {
 
 
 export const applyFilters = (data, filters, schema) => {
+  if (!data || !Array.isArray(data)) return [];
+  if (!filters || Object.keys(filters).length === 0) return data;
+  
   const flatSchema = {};
   let searchConfig = null;
   let searchKey = null;
   
   const flattenSchema = (schemaObj) => {
+    if (!schemaObj) return;
+    
     Object.entries(schemaObj).forEach(([key, config]) => {
-      if (config.type === "group" && config.childrenSchema) {
+      if (!config) return;
+      
+      // Use string comparison with type coercion to handle bundling issues
+      const configType = String(config.type).toLowerCase().trim();
+      
+      if (configType === "group" && config.childrenSchema) {
         Object.entries(config.childrenSchema).forEach(([childKey, childConfig]) => {
           flatSchema[childKey] = childConfig;
         });
-      } else if (config.type === "search") {
+      } else if (configType === "search") {
         // Store search config instead of excluding it
         searchConfig = config;
         searchKey = key;
