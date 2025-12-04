@@ -118,6 +118,8 @@ export const applyFilters = (data, filters, schema) => {
 };
 
 export const extractDynamicOptions = (data, schema) => {
+  if (!Array.isArray(data) || !data.length) return {};
+  
   const { flat } = flattenSchema(schema);
   const options = {};
 
@@ -144,6 +146,10 @@ export const extractDynamicOptions = (data, schema) => {
 };
 
 export const updateSchemaWithDynamicOptions = (schema, data) => {
+  if (!Array.isArray(data)) {
+    data = [];
+  }
+  
   const dynamicOptions = extractDynamicOptions(data, schema);
 
   const update = (obj) => {

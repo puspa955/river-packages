@@ -36,6 +36,9 @@ export const DatasetFilter = ({
         } else if (typeof data === "string") {
           // Treat as URL
           const res = await fetch(data);
+          if (!res.ok) {
+            throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
+          }
           result = await res.json();
         } else if (typeof data === "function") {
           // Async function
@@ -47,12 +50,13 @@ export const DatasetFilter = ({
           result = [];
         }
 
-        // Ensure result is array
-        setSourceData(Array.isArray(result) ? result : []);
+        // Ensure result is array and update state
+        const arrayResult = Array.isArray(result) ? result : [];
+        setSourceData(arrayResult);
       } catch (err) {
-        console.error(err);
+        console.error("DatasetFilter error:", err);
         setError(err);
-        setSourceData([]); // Set empty array on error
+        setSourceData([]); // Always set empty array on error
       } finally {
         setLoading(false);
       }
@@ -83,34 +87,49 @@ export const DatasetFilter = ({
   // ------------------ URL Sync ------------------
   useEffect(() => {
     if (!enableUrlSync) return;
-    const params = new URLSearchParams(window.location.search);
-    const encoded = params.get("f");
-    if (encoded) setFilters(decodeFilters(encoded));
+    
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const encoded = params.get("f");
+      if (encoded) {
+        const decoded = decodeFilters(encoded);
+        if (Object.keys(decoded).length > 0) {
+          setFilters(decoded);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to decode filters from URL:", err);
+    }
   }, [enableUrlSync]);
 
   useEffect(() => {
     if (!enableUrlSync) return;
-    const encoded = encodeFilters(filters);
-    if (!encoded) {
-      window.history.replaceState({}, "", window.location.pathname);
-      return;
+    
+    try {
+      const encoded = encodeFilters(filters);
+      if (!encoded) {
+        window.history.replaceState({}, "", window.location.pathname);
+        return;
+      }
+      const params = new URLSearchParams();
+      params.set("f", encoded);
+      window.history.replaceState({}, "", `?${params.toString()}`);
+    } catch (err) {
+      console.error("Failed to encode filters to URL:", err);
     }
-    const params = new URLSearchParams();
-    params.set("f", encoded);
-    window.history.replaceState({}, "", `?${params.toString()}`);
   }, [filters, enableUrlSync]);
 
   // ------------------ Schema & Filtering ------------------
-  // FIX: Ensure sourceData is always an array before passing to useMemo
-  const updatedSchema = useMemo(
-    () => updateSchemaWithDynamicOptions(schema, Array.isArray(sourceData) ? sourceData : []),
-    [schema, sourceData]
-  );
+  // Always ensure we pass arrays to these functions
+  const updatedSchema = useMemo(() => {
+    const safeData = Array.isArray(sourceData) ? sourceData : [];
+    return updateSchemaWithDynamicOptions(schema, safeData);
+  }, [schema, sourceData]);
 
-  const filteredData = useMemo(
-    () => applyFilters(Array.isArray(sourceData) ? sourceData : [], filters, updatedSchema),
-    [sourceData, filters, updatedSchema]
-  );
+  const filteredData = useMemo(() => {
+    const safeData = Array.isArray(sourceData) ? sourceData : [];
+    return applyFilters(safeData, filters, updatedSchema);
+  }, [sourceData, filters, updatedSchema]);
 
   // ------------------ Loading / Error ------------------
   if (loading) {
@@ -127,9 +146,17 @@ export const DatasetFilter = ({
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center text-red-600">
-          <p className="font-semibold mb-2">Error loading data</p>
-          <p className="text-sm">{error.message}</p>
+        <div className="text-center">
+          <div className="text-red-600 mb-4">
+            <p className="font-semibold text-lg mb-2">Error loading data</p>
+            <p className="text-sm">{error.message}</p>
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+          >
+            Retry
+          </button>
         </div>
       </div>
     );
