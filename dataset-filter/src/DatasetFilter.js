@@ -1,73 +1,81 @@
-"use client";
-
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { FilterPanel } from "./FilterPanel";
 import { SearchHeader } from "./FilterItem";
-import {
-  applyFilters,
-  updateSchemaWithDynamicOptions,
-  decodeFilters,
-  encodeFilters,
-} from "./FilterUtils";
+import { applyFilters, updateSchemaWithDynamicOptions, decodeFilters, encodeFilters } from "./FilterUtils";
 import { Loader2 } from "lucide-react";
 
 export const DatasetFilter = ({
   schema,
-  data, // can be array, URL string, or async function
+  data = null, // Static data (if provided, no fetching)
+  url = null, // URL for fetching data
+  queryKey = null, // Optional custom query key
+  queryFn = null, // Optional custom query function
+  dataTransform = null, // Optional custom data transform
   renderContent,
   enableUrlSync = true,
-  className = "",
+  queryOptions = {},
+  className = ""
 }) => {
   const [filters, setFilters] = useState({});
-  const [sourceData, setSourceData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
-  // ------------------ Load data ------------------
-  useEffect(() => {
-    const loadData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        let result;
+  // Determine if we should fetch data
+  const shouldFetch = !data && (url || queryFn);
 
-        if (Array.isArray(data)) {
-          result = data;
-        } else if (typeof data === "string") {
-          // Treat as URL
-          const res = await fetch(data);
-          if (!res.ok) {
-            throw new Error(`Failed to fetch: ${res.status} ${res.statusText}`);
-          }
-          result = await res.json();
-        } else if (typeof data === "function") {
-          // Async function
-          result = await data();
-        } else {
-          console.warn(
-            "DatasetFilter: data must be array, URL string, or async function"
-          );
-          result = [];
-        }
+  // Internal query function
+  const internalQueryFn = useCallback(async () => {
+    if (queryFn) return queryFn();
+    
+    if (!url) {
+      throw new Error("Either data, url, or queryFn must be provided");
+    }
 
-        // Ensure result is array and update state
-        const arrayResult = Array.isArray(result) ? result : [];
-        setSourceData(arrayResult);
-      } catch (err) {
-        console.error("DatasetFilter error:", err);
-        setError(err);
-        setSourceData([]); // Always set empty array on error
-      } finally {
-        setLoading(false);
-      }
-    };
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`Failed to fetch data: ${res.statusText}`);
+    return res.json();
+  }, [url, queryFn]);
 
-    loadData();
-  }, [data]);
+  // Internal data transform that handles common response structures
+  const internalDataTransform = useCallback((result) => {
+    if (dataTransform) return dataTransform(result);
+    if (!result) return [];
+    // Handle common response formats
+    return result.list || result.data || result;
+  }, [dataTransform]);
 
-  // ------------------ Filters ------------------
+  // Generate query key
+  const generatedQueryKey = useMemo(() => {
+    if (queryKey) return queryKey;
+    if (url) return ['dataset-url', url];
+    return ['dataset'];
+  }, [queryKey, url]);
+
+  const { data: fetchedData, isLoading, error } = useQuery({
+    queryKey: generatedQueryKey,
+    queryFn: internalQueryFn,
+    enabled: shouldFetch,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    ...queryOptions
+  });
+
+  // Use static data or fetched data
+  const sourceData = useMemo(() => {
+    if (data) return Array.isArray(data) ? data : [];
+    return internalDataTransform(fetchedData) || [];
+  }, [data, fetchedData, internalDataTransform]);
+
+  const updatedSchema = useMemo(
+    () => updateSchemaWithDynamicOptions(schema, sourceData),
+    [schema, sourceData]
+  );
+
+  const filteredData = useMemo(
+    () => applyFilters(sourceData, filters, updatedSchema),
+    [sourceData, filters, updatedSchema]
+  );
+
   const updateFilter = useCallback((key, value) => {
-    setFilters((prev) => {
+    setFilters(prev => {
       const newFilters = { ...prev };
       if (
         value === undefined ||
@@ -84,59 +92,30 @@ export const DatasetFilter = ({
     });
   }, []);
 
-  // ------------------ URL Sync ------------------
   useEffect(() => {
     if (!enableUrlSync) return;
-    
-    try {
-      const params = new URLSearchParams(window.location.search);
-      const encoded = params.get("f");
-      if (encoded) {
-        const decoded = decodeFilters(encoded);
-        if (Object.keys(decoded).length > 0) {
-          setFilters(decoded);
-        }
-      }
-    } catch (err) {
-      console.error("Failed to decode filters from URL:", err);
-    }
+    const params = new URLSearchParams(window.location.search);
+    const encoded = params.get("f");
+    if (encoded) setFilters(decodeFilters(encoded));
   }, [enableUrlSync]);
 
   useEffect(() => {
     if (!enableUrlSync) return;
-    
-    try {
-      const encoded = encodeFilters(filters);
-      if (!encoded) {
-        window.history.replaceState({}, "", window.location.pathname);
-        return;
-      }
-      const params = new URLSearchParams();
-      params.set("f", encoded);
-      window.history.replaceState({}, "", `?${params.toString()}`);
-    } catch (err) {
-      console.error("Failed to encode filters to URL:", err);
+    const encoded = encodeFilters(filters);
+    if (!encoded) {
+      window.history.replaceState({}, "", window.location.pathname);
+      return;
     }
+    const params = new URLSearchParams();
+    params.set("f", encoded);
+    window.history.replaceState({}, "", `?${params.toString()}`);
   }, [filters, enableUrlSync]);
 
-  // ------------------ Schema & Filtering ------------------
-  // Always ensure we pass arrays to these functions
-  const updatedSchema = useMemo(() => {
-    const safeData = Array.isArray(sourceData) ? sourceData : [];
-    return updateSchemaWithDynamicOptions(schema, safeData);
-  }, [schema, sourceData]);
-
-  const filteredData = useMemo(() => {
-    const safeData = Array.isArray(sourceData) ? sourceData : [];
-    return applyFilters(safeData, filters, updatedSchema);
-  }, [sourceData, filters, updatedSchema]);
-
-  // ------------------ Loading / Error ------------------
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-2" />
+          <Loader2 className="w-8 h-8 animate-spin text-primary-600 mx-auto mb-2" />
           <p className="text-gray-600">Loading data...</p>
         </div>
       </div>
@@ -146,23 +125,14 @@ export const DatasetFilter = ({
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="text-red-600 mb-4">
-            <p className="font-semibold text-lg mb-2">Error loading data</p>
-            <p className="text-sm">{error.message}</p>
-          </div>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
-          >
-            Retry
-          </button>
+        <div className="text-center text-red-600">
+          <p className="font-semibold mb-2">Error loading data</p>
+          <p className="text-sm">{error.message}</p>
         </div>
       </div>
     );
   }
 
-  // ------------------ Render ------------------
   return (
     <div className={`flex min-h-screen bg-gray-50 ${className}`}>
       <FilterPanel
