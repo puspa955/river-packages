@@ -52,6 +52,7 @@ export const DatasetFilter = ({
       } catch (err) {
         console.error(err);
         setError(err);
+        setSourceData([]); // Set empty array on error
       } finally {
         setLoading(false);
       }
@@ -100,13 +101,14 @@ export const DatasetFilter = ({
   }, [filters, enableUrlSync]);
 
   // ------------------ Schema & Filtering ------------------
+  // FIX: Ensure sourceData is always an array before passing to useMemo
   const updatedSchema = useMemo(
-    () => updateSchemaWithDynamicOptions(schema, sourceData || []),
+    () => updateSchemaWithDynamicOptions(schema, Array.isArray(sourceData) ? sourceData : []),
     [schema, sourceData]
   );
 
   const filteredData = useMemo(
-    () => applyFilters(sourceData || [], filters, updatedSchema),
+    () => applyFilters(Array.isArray(sourceData) ? sourceData : [], filters, updatedSchema),
     [sourceData, filters, updatedSchema]
   );
 
@@ -115,7 +117,7 @@ export const DatasetFilter = ({
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-primary-600 mx-auto mb-2" />
+          <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-2" />
           <p className="text-gray-600">Loading data...</p>
         </div>
       </div>
