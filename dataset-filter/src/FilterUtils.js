@@ -10,6 +10,7 @@ export const getNestedValue = (obj, path) => {
 export const applyFilters = (data, filters, schema) => {
   const flatSchema = {};
   let searchConfig = null;
+  let searchKey = null;
   
   const flattenSchema = (schemaObj) => {
     Object.entries(schemaObj).forEach(([key, config]) => {
@@ -18,7 +19,9 @@ export const applyFilters = (data, filters, schema) => {
           flatSchema[childKey] = childConfig;
         });
       } else if (config.type === "search") {
-        searchConfig = { key, ...config };  
+        // Store search config instead of excluding it
+        searchConfig = config;
+        searchKey = key;
       } else {
         flatSchema[key] = config;
       }
@@ -28,21 +31,33 @@ export const applyFilters = (data, filters, schema) => {
   flattenSchema(schema);
 
   return data.filter(item => {
-    if (searchConfig && filters[searchConfig.key]) {
-      const searchTerm = filters[searchConfig.key];
-      const fields = Array.isArray(searchConfig.fields) ? searchConfig.fields : [searchConfig.field];
-      const matchesSearch = fields.some(field => {
-        const value = getNestedValue(item, field);
-        if (Array.isArray(value)) {
-          return value.some(v => String(v || '').toLowerCase().includes(searchTerm.toLowerCase()));
-        }
-        return String(value || '').toLowerCase().includes(searchTerm.toLowerCase());
-      });
-      if (!matchesSearch) return false;
+    // Handle search filter first
+    if (searchConfig && searchKey && filters[searchKey]) {
+      const searchTerm = filters[searchKey];
+      if (searchTerm && searchTerm.trim()) {
+        const fields = Array.isArray(searchConfig.fields) ? searchConfig.fields : [searchConfig.field];
+        const matchesSearch = fields.some(field => {
+          const value = getNestedValue(item, field);
+          
+          // Handle array values (like features in products)
+          if (Array.isArray(value)) {
+            return value.some(v => 
+              String(v || '').toLowerCase().includes(searchTerm.toLowerCase())
+            );
+          }
+          
+          // Handle regular values
+          return String(value || '').toLowerCase().includes(searchTerm.toLowerCase());
+        });
+        
+        if (!matchesSearch) return false;
+      }
     }
 
+    // Handle other filters
     return Object.entries(filters).every(([filterKey, filterValue]) => {
-      if (searchConfig && filterKey === searchConfig.key) return true;
+      // Skip search key since we already handled it above
+      if (searchKey && filterKey === searchKey) return true;
       
       if (!filterValue || (Array.isArray(filterValue) && filterValue.length === 0)) return true;
 
@@ -52,14 +67,6 @@ export const applyFilters = (data, filters, schema) => {
       let itemValue = getNestedValue(item, config.field);
 
       switch (config.type) {
-        case 'search': {
-          const fields = Array.isArray(config.fields) ? config.fields : [config.field];
-          return fields.some(field => {
-            const value = getNestedValue(item, field);
-            return String(value || '').toLowerCase().includes(filterValue.toLowerCase());
-          });
-        }
-
         case 'checkbox-group': {
           if (config.transform && itemValue !== null && itemValue !== undefined) {
             itemValue = config.transform(itemValue);
