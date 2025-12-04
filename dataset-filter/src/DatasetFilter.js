@@ -19,9 +19,6 @@ export const DatasetFilter = ({
 }) => {
   const [filters, setFilters] = useState({});
 
-  // Determine if we should fetch data
-  const shouldFetch = !data && (url || queryFn);
-
   // Internal query function
   const internalQueryFn = useCallback(async () => {
     if (queryFn) return queryFn();
@@ -49,6 +46,9 @@ export const DatasetFilter = ({
     if (url) return ['dataset-url', url];
     return ['dataset'];
   }, [queryKey, url]);
+
+  // Determine if we should fetch data (must be a boolean)
+  const shouldFetch = Boolean(!data && (url || queryFn));
 
   const { data: fetchedData, isLoading, error } = useQuery({
     queryKey: generatedQueryKey,
