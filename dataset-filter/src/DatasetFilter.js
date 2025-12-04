@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { FilterPanel } from "./FilterPanel";
 import { SearchHeader } from "./FilterItem";
 import {
@@ -14,56 +13,54 @@ import { Loader2 } from "lucide-react";
 
 export const DatasetFilter = ({
   schema,
-  data, // can be array, URL string, or promise function
+  data, // can be array, URL string, or async function
   renderContent,
   enableUrlSync = true,
   className = "",
-  queryOptions = {},
 }) => {
   const [filters, setFilters] = useState({});
+  const [sourceData, setSourceData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Determine the internal query function automatically
-  const internalQueryFn = useMemo(() => {
-    if (Array.isArray(data)) {
-      return () => Promise.resolve(data); // static array
-    } else if (typeof data === "string") {
-      return async () => {
-        const res = await fetch(data);
-        const json = await res.json();
-        return json;
-      }; // URL string
-    } else if (typeof data === "function") {
-      return data; // user passed a function returning promise
-    } else {
-      return () => Promise.resolve([]);
-    }
+  // ------------------ Load data ------------------
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        let result;
+
+        if (Array.isArray(data)) {
+          result = data;
+        } else if (typeof data === "string") {
+          // Treat as URL
+          const res = await fetch(data);
+          result = await res.json();
+        } else if (typeof data === "function") {
+          // Async function
+          result = await data();
+        } else {
+          console.warn(
+            "DatasetFilter: data must be array, URL string, or async function"
+          );
+          result = [];
+        }
+
+        // Ensure result is array
+        setSourceData(Array.isArray(result) ? result : []);
+      } catch (err) {
+        console.error(err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadData();
   }, [data]);
 
-  const { data: fetchedData, isLoading, error } = useQuery({
-    queryKey: ["dataset"],
-    queryFn: internalQueryFn,
-    ...queryOptions,
-  });
-
-  const sourceData = useMemo(() => {
-    if (!fetchedData) return [];
-    // if API response has list or items property, auto-transform
-    if (Array.isArray(fetchedData)) return fetchedData;
-    if (fetchedData.list) return fetchedData.list;
-    if (fetchedData.items) return fetchedData.items;
-    return Array.isArray(fetchedData) ? fetchedData : [];
-  }, [fetchedData]);
-
-  const updatedSchema = useMemo(
-    () => updateSchemaWithDynamicOptions(schema, sourceData),
-    [schema, sourceData]
-  );
-
-  const filteredData = useMemo(
-    () => applyFilters(sourceData, filters, updatedSchema),
-    [sourceData, filters, updatedSchema]
-  );
-
+  // ------------------ Filters ------------------
   const updateFilter = useCallback((key, value) => {
     setFilters((prev) => {
       const newFilters = { ...prev };
@@ -82,7 +79,7 @@ export const DatasetFilter = ({
     });
   }, []);
 
-  // URL sync
+  // ------------------ URL Sync ------------------
   useEffect(() => {
     if (!enableUrlSync) return;
     const params = new URLSearchParams(window.location.search);
@@ -102,22 +99,41 @@ export const DatasetFilter = ({
     window.history.replaceState({}, "", `?${params.toString()}`);
   }, [filters, enableUrlSync]);
 
-  if (isLoading) {
+  // ------------------ Schema & Filtering ------------------
+  const updatedSchema = useMemo(
+    () => updateSchemaWithDynamicOptions(schema, sourceData || []),
+    [schema, sourceData]
+  );
+
+  const filteredData = useMemo(
+    () => applyFilters(sourceData || [], filters, updatedSchema),
+    [sourceData, filters, updatedSchema]
+  );
+
+  // ------------------ Loading / Error ------------------
+  if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="w-8 h-8 animate-spin text-primary-600 mx-auto" />
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary-600 mx-auto mb-2" />
+          <p className="text-gray-600">Loading data...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-red-600">
-        Error loading data: {error.message}
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center text-red-600">
+          <p className="font-semibold mb-2">Error loading data</p>
+          <p className="text-sm">{error.message}</p>
+        </div>
       </div>
     );
   }
 
+  // ------------------ Render ------------------
   return (
     <div className={`flex min-h-screen bg-gray-50 ${className}`}>
       <FilterPanel
@@ -134,6 +150,7 @@ export const DatasetFilter = ({
             onFilterChange={updateFilter}
             onRemoveFilter={updateFilter}
           />
+
           {renderContent &&
             renderContent({
               filteredData,
