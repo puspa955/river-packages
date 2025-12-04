@@ -38,6 +38,9 @@ export const flattenSchema = (schema) => {
   let search = null;
 
   const helper = (obj) => {
+    // Guard: Ensure obj is an object before calling Object.entries
+    if (!obj || typeof obj !== 'object') return;
+    
     Object.entries(obj).forEach(([key, config]) => {
       if (!config) return;
 
@@ -86,8 +89,9 @@ const handlers = {
 };
 
 export const applyFilters = (data, filters, schema) => {
-  // FIX: Guard against non-array data
-  if (!Array.isArray(data) || !data.length) return [];
+  // Guard: Ensure data is an array
+  if (!Array.isArray(data)) return [];
+  if (!data.length) return [];
   if (!filters || !Object.keys(filters).length) return data;
 
   const { flat, search } = flattenSchema(schema);
@@ -119,27 +123,40 @@ export const applyFilters = (data, filters, schema) => {
 };
 
 export const extractDynamicOptions = (data, schema) => {
-  // FIX: Guard against non-array data at the start
-  if (!Array.isArray(data) || !data.length) return {};
+  // CRITICAL Guard: Ensure data is an array at the very start
+  if (!data || !Array.isArray(data)) {
+    console.warn('extractDynamicOptions: data must be an array, received:', typeof data);
+    return {};
+  }
+  
+  if (!data.length) return {};
   
   const { flat } = flattenSchema(schema);
   const options = {};
 
+  // Guard: Ensure flat is an object
+  if (!flat || typeof flat !== 'object') return {};
+
   Object.entries(flat).forEach(([key, config]) => {
+    if (!config) return;
     if (config.options?.length) return;
     if (!['checkbox-group', 'checkbox'].includes(config.type)) return;
 
     const set = new Set();
-    data.forEach(item => {
-      let val = getNestedValue(item, config.field);
-      if (config.transform && val != null) val = config.transform(val);
+    
+    // Additional guard: Double-check data is still an array before forEach
+    if (Array.isArray(data)) {
+      data.forEach(item => {
+        let val = getNestedValue(item, config.field);
+        if (config.transform && val != null) val = config.transform(val);
 
-      if (config.isArray && Array.isArray(val)) {
-        val.forEach(v => v != null && set.add(String(v)));
-      } else if (val != null) {
-        set.add(String(val));
-      }
-    });
+        if (config.isArray && Array.isArray(val)) {
+          val.forEach(v => v != null && set.add(String(v)));
+        } else if (val != null) {
+          set.add(String(val));
+        }
+      });
+    }
 
     options[key] = Array.from(set).sort();
   });
@@ -148,15 +165,19 @@ export const extractDynamicOptions = (data, schema) => {
 };
 
 export const updateSchemaWithDynamicOptions = (schema, data) => {
-  // CRITICAL FIX: Ensure data is array before passing to extractDynamicOptions
-  if (!Array.isArray(data)) {
+  // CRITICAL Guard: Ensure data is an array before any operations
+  if (!data || !Array.isArray(data)) {
+    console.warn('updateSchemaWithDynamicOptions: data must be an array, received:', typeof data);
     data = [];
   }
   
-  // CRITICAL FIX: Pass arguments in CORRECT order (data, schema)
+  // Pass data and schema in correct order
   const dynamicOptions = extractDynamicOptions(data, schema);
 
   const update = (obj) => {
+    // Guard: Ensure obj is an object
+    if (!obj || typeof obj !== 'object') return {};
+    
     return Object.fromEntries(
       Object.entries(obj).map(([key, config]) => {
         if (!config) return [key, config];
