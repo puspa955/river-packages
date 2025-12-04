@@ -44,7 +44,6 @@ export const FilterPanel = ({ schema, filters, onFilterChange }) => {
     return null;
   };
 
-  // Standalone checkboxes (type === "checkbox")
   const standaloneCheckboxes = Object.entries(schema).filter(
     ([, config]) => config.type === "checkbox"
   );
@@ -87,7 +86,6 @@ export const FilterPanel = ({ schema, filters, onFilterChange }) => {
         </div>
       )}
 
-      {/* All other filters */}
       {Object.entries(schema).map(([key, config]) => renderFilter(key, config))}
     </div>
   );

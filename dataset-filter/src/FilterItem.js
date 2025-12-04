@@ -1,8 +1,7 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { ChevronDown, Search, SlidersHorizontal, X } from 'lucide-react';
+import { useCallback, useMemo, useState } from 'react';
+import { Search, X } from 'lucide-react';
 import { FilterSection } from './FilterSection';
 
-/* ------------------------------ SHARED CHECKBOX COMPONENT ------------------------------ */
 export const CheckboxItem = ({ checked, onChange, label }) => {
   return (
     <label className="flex items-start gap-3 cursor-pointer group w-fit">
@@ -56,7 +55,6 @@ export const CheckboxGroupFilter = ({ config = {}, value = [], onChange, isNeste
 };
 
 
-/* ------------------------------ RANGE FILTER ------------------------------ */
 export const RangeFilter = ({ config, value = [], onChange, isNested = false }) => {
   const toggleRange = useCallback((label) => {
     const newValue = value.includes(label) ? value.filter(v => v !== label) : [...value, label];
@@ -79,7 +77,6 @@ export const RangeFilter = ({ config, value = [], onChange, isNested = false }) 
   );
 };
 
-/* ------------------------------ STANDALONE CHECKBOX ------------------------------ */
 export const CheckboxFilter = ({ config, value = false, onChange }) => {
   return (
     <div>
@@ -92,7 +89,6 @@ export const CheckboxFilter = ({ config, value = false, onChange }) => {
   );
 };
 
-/* ------------------------------ NESTED GROUP FILTER ------------------------------ */
 export const NestedGroupFilter = ({ config, filters, onFilterChange, defaultExpanded = true }) => {
   if (!config.children || config.children.length === 0) return null;
 
@@ -176,7 +172,6 @@ export const FilterBadges = ({ schema, filters, onRemove }) => {
   );
 };
 
-/* ------------------------------ SEARCH HEADER ------------------------------ */
 export const SearchHeader = ({ schema, filters, onFilterChange }) => {
   const searchConfigEntry = Object.entries(schema).find(([_, c]) => c.type === "search");
   if (!searchConfigEntry) return null;
