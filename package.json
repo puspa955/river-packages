@@ -1,5 +1,5 @@
 {
-  "name": "@ankamala/ui-libraries",
+  "name": "@ankamala/table",
   "version": "1.0.0",
   "peerDependencies": {
     "react": ">=18.0.0",
@@ -10,19 +10,13 @@
   "private": true,
   "workspaces": [
   "core",
-  "filter",
-  "dataset-filter",
-  "richselect",
   "table"
 ],
   "scripts": {
     "build": "npm run build:all",
     "build:core": "cd core && npm run build",
-    "build:filter": "cd filter && npm run build",
-    "build:richselect": "cd richselect && npm run build",
-    "build:dataset-filter": "cd dataset-filter && npm run build",
     "build:table": "cd table && npm run build",
-    "build:all": "npm run build:core && npm run build:filter && npm run build:dataset-filter && npm run build:richselect && npm run build:table"  
+    "build:all": "npm run build:core && npm run build:table"  
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
