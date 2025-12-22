@@ -12,8 +12,7 @@
   "core",
   "filter",
   "dataset-filter",
-  "richselect",
-  "table"
+  "richselect"
 ],
   "scripts": {
     "build": "npm run build:all",
@@ -21,8 +20,7 @@
     "build:filter": "cd filter && npm run build",
     "build:richselect": "cd richselect && npm run build",
     "build:dataset-filter": "cd dataset-filter && npm run build",
-    "build:table": "cd table && npm run build",
-    "build:all": "npm run build:core && npm run build:filter && npm run build:dataset-filter && npm run build:richselect && npm run build:table"  
+    "build:all": "npm run build:core && npm run build:filter && npm run build:dataset-filter && npm run build:richselect"  
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
