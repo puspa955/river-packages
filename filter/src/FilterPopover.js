@@ -1,99 +1,104 @@
 import { useState } from "react";
-import { Button, FAIcon, Popover, PopoverTrigger, PopoverContent, TooltipProvider } from "@ankamala/core";
+import {
+  Button,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  TooltipProvider
+} from "@ankamala/core";
 import Filters from "./Filters";
 import { countConditions } from "../utils/filterUtils";
+import { FAIcon } from "@ankamala/core";
 
-export default function FilterPopover({ 
-  options, 
-  filterData, 
-  defaultCondition, 
-  filters, 
-  updateFilters, 
+export default function FilterPopover({
+  options,
+  filterData,
+  defaultCondition,
+  filters,
+  updateFilters,
   keysMeta,
-  buttonText,
-  buttonIcon = "filter",
-  buttonClassName,
-  buttonSize = "default", 
-  badgeClassName,
-  showBadge = true,
-  popoverClassName,
-  popoverContentClassName,
-  variant = "default", 
-  renderTrigger, 
+
+  trigger,
+  triggerIcon,
+  triggerLabel,
+  renderCount,
+  triggerClassName = "",
+  contentClassName = "",
+
+  open: controlledOpen,
+  defaultOpen = false,
+  onOpenChange,
+  closeOnApply = true
 }) {
-  const [isPopoverOpen, setPopoverOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(defaultOpen);
+  const isControlled = controlledOpen !== undefined;
+  const isOpen = isControlled ? controlledOpen : internalOpen;
+
+  const setOpen = (value) => {
+    if (!isControlled) setInternalOpen(value);
+    onOpenChange?.(value);
+  };
 
   const filterCount = countConditions(filters);
+  const closePopover = () => setOpen(false);
 
-  const togglePopover = () => setPopoverOpen(!isPopoverOpen);
-  const closePopover = () => setPopoverOpen(false);
+  const showIcon = !!triggerIcon;
+  const showLabel = !!triggerLabel;
 
-  const sizeClasses = {
-    sm: "h-8 w-8 text-sm",
-    default: "h-10 w-10 text-lg",
-    lg: "h-12 w-12 text-xl",
-  };
-
-  const variantClasses = {
-    default: "",
-    outline: "border-2 border-slate-300 bg-white hover:bg-slate-50",
-    ghost: "bg-transparent hover:bg-slate-100 shadow-none",
-    text: "bg-transparent shadow-none hover:bg-slate-50",
-  };
-
-  const DefaultTrigger = () => (
-    <Button 
-      className={`
-        rounded-sm shadow-lg relative
-        ${buttonText ? 'w-auto px-4 gap-2' : sizeClasses[buttonSize]}
-        ${variantClasses[variant]}
-        ${buttonClassName || ''}
-      `}
+  const defaultTrigger = (
+    <Button
+      className={`flex items-center gap-2 rounded-sm h-10 relative ${triggerClassName}`}
     >
-      {buttonIcon && <FAIcon icon={buttonIcon} />}
-      {buttonText && <span>{buttonText}</span>}
-      {showBadge && filterCount > 0 && (
-        <span 
-          className={`
-            absolute top-0 right-0 text-xs bg-primary-600 text-white 
-            rounded-full w-5 h-5 flex items-center justify-center text-center 
-            -mr-2 -mt-2
-            ${badgeClassName || ''}
-          `}
-        >
-          {filterCount}
+      {/* Icon */}
+      {showIcon && (
+        <span className="inline-flex items-center">
+          {triggerIcon}
         </span>
+      )}
+
+      {/* Label */}
+      {showLabel && (
+        <span className="text-sm font-medium">
+          {triggerLabel}
+        </span>
+      )}
+
+      {/* Fallback if nothing provided */}
+      {!showIcon && !showLabel && (
+        <FAIcon icon="filter" />
+      )}
+
+      {/* Count badge */}
+      {filterCount > 0 && (
+        renderCount
+          ? renderCount(filterCount)
+          : (
+            <span className="absolute -top-2 -right-2 text-xs bg-primary-600 text-white rounded-full w-5 h-5 flex items-center justify-center">
+              {filterCount}
+            </span>
+          )
       )}
     </Button>
   );
 
   return (
-    <Popover
-      className={`z-10 ${popoverClassName || ''}`}
-      style={{ zIndex: 10 }}
-      open={isPopoverOpen}
-      onOpenChange={togglePopover}
-    >
+    <Popover open={isOpen} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        {renderTrigger ? renderTrigger({ filterCount, isOpen: isPopoverOpen, toggle: togglePopover }) : <DefaultTrigger />}
+        {trigger ?? defaultTrigger}
       </PopoverTrigger>
 
-      <PopoverContent 
-        className={`
-          max-w-[60vw] w-auto max-h-[70vh] overflow-y-auto 
-          rounded-none bg-gray-50 border-t-2 border-t-primary-700 p-6
-          ${popoverContentClassName || ''}
-        `}
+      <PopoverContent
+        className={`max-w-[60vw] max-h-[70vh] overflow-y-auto p-6 ${contentClassName}`}
       >
         <TooltipProvider>
-          <Filters 
-            closePopover={closePopover}
+          <Filters
             options={options}
             filterData={filterData}
             defaultCondition={defaultCondition}
             filters={filters}
             updateFilters={updateFilters}
             keysMeta={keysMeta}
+            closePopover={closeOnApply ? closePopover : undefined}
           />
         </TooltipProvider>
       </PopoverContent>
