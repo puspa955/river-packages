@@ -1,104 +1,68 @@
 import { useState } from "react";
-import {
-  Button,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  TooltipProvider
-} from "@ankamala/core";
+import { Button, FAIcon, Popover, PopoverTrigger, PopoverContent, TooltipProvider } from "@ankamala/core";
 import Filters from "./Filters";
 import { countConditions } from "../utils/filterUtils";
-import { FAIcon } from "@ankamala/core";
 
-export default function FilterPopover({
-  options,
-  filterData,
-  defaultCondition,
-  filters,
-  updateFilters,
+
+export default function FilterPopover({ 
+  // Option 1: Pass everything manually (legacy support)
+  options, 
+  filterData, 
+  defaultCondition, 
+  filters, 
+  updateFilters, 
   keysMeta,
-
-  trigger,
-  triggerIcon,
-  triggerLabel,
-  renderCount,
-  triggerClassName = "",
-  contentClassName = "",
-
-  open: controlledOpen,
-  defaultOpen = false,
-  onOpenChange,
-  closeOnApply = true
+  // Option 2: Pass filterProps from useFilter hook (new way)
+  filterProps,
 }) {
-  const [internalOpen, setInternalOpen] = useState(defaultOpen);
-  const isControlled = controlledOpen !== undefined;
-  const isOpen = isControlled ? controlledOpen : internalOpen;
+  const [isPopoverOpen, setPopoverOpen] = useState(false);
 
-  const setOpen = (value) => {
-    if (!isControlled) setInternalOpen(value);
-    onOpenChange?.(value);
+  // Use filterProps if provided, otherwise fall back to individual props
+  const actualProps = filterProps || {
+    options,
+    filterData,
+    defaultCondition,
+    filters,
+    updateFilters,
+    keysMeta,
   };
 
-  const filterCount = countConditions(filters);
-  const closePopover = () => setOpen(false);
+  const filterCount = countConditions(actualProps.filters);
 
-  const showIcon = !!triggerIcon;
-  const showLabel = !!triggerLabel;
+  const togglePopover = () => setPopoverOpen(!isPopoverOpen);
+  const closePopover = () => setPopoverOpen(false);
 
-  const defaultTrigger = (
-    <Button
-      className={`flex items-center gap-2 rounded-sm h-10 relative ${triggerClassName}`}
-    >
-      {/* Icon */}
-      {showIcon && (
-        <span className="inline-flex items-center">
-          {triggerIcon}
-        </span>
-      )}
-
-      {/* Label */}
-      {showLabel && (
-        <span className="text-sm font-medium">
-          {triggerLabel}
-        </span>
-      )}
-
-      {/* Fallback if nothing provided */}
-      {!showIcon && !showLabel && (
-        <FAIcon icon="filter" />
-      )}
-
-      {/* Count badge */}
-      {filterCount > 0 && (
-        renderCount
-          ? renderCount(filterCount)
-          : (
-            <span className="absolute -top-2 -right-2 text-xs bg-primary-600 text-white rounded-full w-5 h-5 flex items-center justify-center">
-              {filterCount}
-            </span>
-          )
-      )}
-    </Button>
-  );
+  // Don't render if no filterData
+  if (!actualProps.filterData) return null;
 
   return (
-    <Popover open={isOpen} onOpenChange={setOpen}>
+    <Popover
+      className="z-10"
+      style={{ zIndex: 10 }}
+      open={isPopoverOpen}
+      onOpenChange={togglePopover}
+    >
       <PopoverTrigger asChild>
-        {trigger ?? defaultTrigger}
+        <Button className="rounded-sm h-10 w-10 text-lg shadow-lg relative">
+          <FAIcon icon="filter" />
+          {filterCount > 0 && (
+            <span className="absolute top-0 right-0 text-xs bg-primary-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-center -mr-2 -mt-2">
+              {filterCount}
+            </span>
+          )}
+        </Button>
       </PopoverTrigger>
 
-      <PopoverContent
-        className={`max-w-[60vw] max-h-[70vh] overflow-y-auto p-6 ${contentClassName}`}
-      >
+      <PopoverContent className="max-w-[60vw] w-auto max-h-[70vh] overflow-y-auto rounded-none bg-gray-50 border-t-2 border-t-primary-700 p-6">
         <TooltipProvider>
-          <Filters
-            options={options}
-            filterData={filterData}
-            defaultCondition={defaultCondition}
-            filters={filters}
-            updateFilters={updateFilters}
-            keysMeta={keysMeta}
-            closePopover={closeOnApply ? closePopover : undefined}
+          <Filters 
+            closePopover={closePopover}
+            options={actualProps.options}
+            filterData={actualProps.filterData}
+            defaultCondition={actualProps.defaultCondition}
+            filters={actualProps.filters}
+            updateFilters={actualProps.updateFilters}
+            keysMeta={actualProps.keysMeta}
           />
         </TooltipProvider>
       </PopoverContent>
