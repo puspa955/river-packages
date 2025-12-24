@@ -12,7 +12,8 @@
   "peerDependencies": {
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0",
-    "@tanstack/react-table": "^8.0.0"
+    "@tanstack/react-table": "^8.0.0",
+    "@ankamala/ui-libraries/filter": "^1.0.0"
 
   },
   "dependencies": {

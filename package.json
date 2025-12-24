@@ -10,7 +10,8 @@
   "private": true,
   "workspaces": [
   "core",
-  "table"
+  "table",
+  "filter"
 ],
   "scripts": {
     "build": "npm run build:all",
