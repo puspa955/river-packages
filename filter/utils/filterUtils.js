@@ -58,11 +58,6 @@ export const Fence = {
   },
 };
 
-function getNestedValue(obj, path) {
-  if (!path) return undefined;
-  return path.split('.').reduce((current, key) => current?.[key], obj);
-}
-
 // Function to evaluate a filter schema against an item
 export function evaluateFilter(item, schema) {
   if (!schema) return true;
@@ -70,11 +65,12 @@ export function evaluateFilter(item, schema) {
   if (schema.operator && Array.isArray(schema.rules) && schema.rules.length === 1) {
     return evaluateFilter(item, schema.rules[0]);
   }
-  
+  // If schema is an array, treat as AND (legacy support)
   if (Array.isArray(schema)) {
     return schema.every(sub => evaluateFilter(item, sub));
   }
 
+  // Handle group: AND/OR with rules array
   if (schema.operator && Array.isArray(schema.rules)) {
     const operator = schema.operator.toLowerCase();
 
@@ -87,17 +83,19 @@ export function evaluateFilter(item, schema) {
     }
   }
 
+  // Handle single condition
   if (schema.key && schema.operator && schema.value !== undefined) {
     const { key, value, operator } = schema;
 
-    // ✅ FIX: Use nested path accessor instead of direct property access
-    let itemValue = getNestedValue(item, key);
+    let itemValue = item[key];
 
     // Handle undefined/null values
     if (itemValue === undefined || itemValue === null) {
+      // For 'not equals' operations, null/undefined should return true
       if (operator === '!=' || operator === 'not_equals') {
         return value !== null && value !== undefined && value !== '';
       }
+      // For other operations, null/undefined should return false
       return false;
     }
 
@@ -109,6 +107,7 @@ export function evaluateFilter(item, schema) {
     }
   }
 
+  // If none of the above conditions match, return true (don't filter out)
   return true;
 }
 
