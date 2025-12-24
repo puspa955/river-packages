@@ -2,22 +2,22 @@
   "name": "@ankamala/table",
   "version": "1.0.0",
   "peerDependencies": {
+    "@tanstack/react-query": "^5.0.0",
     "react": ">=18.0.0",
-    "react-dom": ">=18.0.0",
-    "@tanstack/react-query": "^5.0.0"
-
+    "react-dom": ">=18.0.0"
   },
   "private": true,
   "workspaces": [
-  "core",
-  "table",
-  "filter"
-],
+    "core",
+    "table",
+    "filter"
+  ],
   "scripts": {
     "build": "npm run build:all",
     "build:core": "cd core && npm run build",
     "build:table": "cd table && npm run build",
-    "build:all": "npm run build:core && npm run build:table"  
+    "build:filter": "cd filter && npm run build",
+    "build:all": "npm run build:core && npm run build:table && npm run build:filter"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",

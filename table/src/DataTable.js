@@ -13,7 +13,7 @@ import {
   ChevronDown,
   ChevronsUpDown,
 } from "lucide-react";
-import { FilterPopover, useFilter } from "@ankamala/ui-libraries/filter";
+import { FilterPopover, useFilter } from "@ankamala/filter";
 import SearchBar from "./SearchBar";
 import TablePagination from "./TablePagination";
 import { normalizeData, LoadingState, EmptyState, ErrorState, generateFilterOptions } from "./utils/tableUtils";

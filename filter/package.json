@@ -1,6 +1,6 @@
 {
-  "name": "@ankamala/table",
-  "version": "0.1.0",
+  "name": "@ankamala/filter",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -11,13 +11,9 @@
   },
   "peerDependencies": {
     "react": ">=18.0.0",
-    "react-dom": ">=18.0.0",
-    "@tanstack/react-table": "^8.0.0"
-
+    "react-dom": ">=18.0.0"
   },
   "dependencies": {
-    "@ankamala/core": "^1.0.0",
-    "@ankamala/filter": "^1.0.0"
-
+    "@ankamala/core": "^1.0.0"
   }
 }
