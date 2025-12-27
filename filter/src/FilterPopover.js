@@ -3,7 +3,6 @@ import { Button, FAIcon, Popover, PopoverTrigger, PopoverContent, TooltipProvide
 import Filters from "./Filters";
 import { countConditions } from "../utils/filterUtils";
 
-
 export default function FilterPopover({ 
   // Option 1: Pass everything manually (legacy support)
   options, 
@@ -18,8 +17,9 @@ export default function FilterPopover({
   const [isPopoverOpen, setPopoverOpen] = useState(false);
 
   // Use filterProps if provided, otherwise fall back to individual props
-  const actualProps = filterProps || {
-    options,
+  // ✅ FIX: Ensure all props are properly extracted
+  const actualProps = filterProps ? filterProps : {
+    options: options || {},
     filterData,
     defaultCondition,
     filters,
