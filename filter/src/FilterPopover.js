@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, FAIcon, Popover, PopoverTrigger, PopoverContent, TooltipProvider } from "@ankamala/core";
 import Filters from "./Filters";
-import { countConditions } from "../utils/filterUtils";
+import { countConditions } from "./utils/filterUtils";
 
 export default function FilterPopover({ 
   // Option 1: Pass everything manually (legacy support)
