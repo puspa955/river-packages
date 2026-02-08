@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState } from "react"; 
 import { Popover, PopoverTrigger, PopoverContent } from "@ankamala/core";
 import {
   CommandLibrary,
@@ -13,7 +13,6 @@ import {
 import { cn, Spinner } from "@ankamala/core";
 import { FAIcon } from "@ankamala/core";
 import { Tooltip, TooltipProvider } from "@ankamala/core";
-
 // Helpers
 const getOptionValue = (option) => (typeof option === "object" ? option.path : option);
 
@@ -25,36 +24,38 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
   });
 
   return (
-    <div className="relative px-4 pt-4 pb-2 border-t pr-8 w-full overflow-hidden">
-      <div className="flex flex-wrap gap-2 w-full">
-        {sortedSelected.map((option) => (
-          <span
-            key={getOptionValue(option)}
-            onClick={(e) => {
-              e.stopPropagation();
-              onRemove(option);
-            }}
-            className="flex items-center bg-primary-400/10 text-[10px] px-1 py-0.5 rounded-sm cursor-pointer hover:bg-gray-200 transition"
-          >
-            <span className="truncate max-w-[120px]">
-              {typeof option === "object" ? option.label : option}
+    <div className="sticky top-0 bg-white z-10 border-b w-0 min-w-full">
+      <div className="relative px-4 pt-2 pb-4 pr-8">
+        <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto overflow-x-hidden">
+          {sortedSelected.map((option) => (
+            <span
+              key={getOptionValue(option)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onRemove(option);
+              }}
+              className="flex items-center bg-primary-400/10 text-[10px] px-1 py-0.5 rounded-sm cursor-pointer hover:bg-gray-200 transition flex-shrink-0"
+            >
+              <span className="truncate max-w-[120px]">
+                {typeof option === "object" ? option.label : option}
+              </span>
+              <FAIcon icon="close" className="h-2 w-2 ml-1 text-primary-600 flex-shrink-0" />
             </span>
-            <FAIcon icon="close" className="h-2 w-2 ml-1 text-primary-600 flex-shrink-0" />
-          </span>
-        ))}
-      </div>
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-          onClearAll();
-        }}
-        className="absolute top-1 right-2 cursor-pointer"
-      >
-        <Tooltip
-          tooltipText="Clear all"
-          icon="close"
-          className="h-4 w-4 mr-1 text-gray-500 hover:text-gray-800 transition"
-        />
+          ))}
+        </div>
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            onClearAll();
+          }}
+          className="absolute top-1 right-2 cursor-pointer"
+        >
+          <Tooltip
+            tooltipText="Clear all"
+            icon="close"
+            className="h-4 w-4 mr-1 text-gray-500 hover:text-gray-800 transition"
+          />
+        </div>
       </div>
     </div>
   );
@@ -234,42 +235,41 @@ const RichSelect = ({
         >
           {children ? children : trigger(selected)}
         </PopoverTrigger>
-        <PopoverContent align="start" sideOffset={4} className={cn("bg-white border w-auto max-w-fit", !isShadow && "shadow-none")}>
-              <TooltipProvider>
+        <PopoverContent align="start" sideOffset={4} className={cn("bg-white border w-auto", !isShadow && "shadow-none")}>
+                        <TooltipProvider>
 
-          <CommandLibrary shouldFilter={false} className="w-full">
-            {isSearchable && (
-              <CommandInput
-                placeholder={searchPlaceholder}
-                className="px-4 py-2 mb-2 border-b border-gray-300"
-                onValueChange={handleSearchChange}
-              />
-            )}
+            <CommandLibrary shouldFilter={false}>
+              {isSearchable && (
+                <CommandInput
+                  placeholder={searchPlaceholder}
+                  className="px-4 py-2 mb-2 border-b border-gray-300"
+                  onValueChange={handleSearchChange}
+                />
+              )}
 
-            <CommandList>
-              <RecursiveOptions
-                options={filteredOptions}
-                selected={selected}
-                onOptionSelect={handleOptionSelect}
-                multiple={multiple}
-                isSmall={isSmall}
-                optionTooltip={optionTooltip}
-              />
+              <CommandList>
+                {multiple && selected.length > 0 &&
+                  (showSelectedSummary === "always" || (showSelectedSummary !== false && options.length > 6)) && (
+                    <SelectedOptionsDisplay
+                      selected={selected}
+                      onRemove={handleOptionSelect}
+                      onClearAll={() => onSelect([])}
+                    />
+                  )}
 
-              {multiple && selected.length > 0 &&
-                (showSelectedSummary === "always" || (showSelectedSummary !== false && options.length > 6)) && (
-                  <SelectedOptionsDisplay
-                    selected={selected}
-                    onRemove={handleOptionSelect}
-                    onClearAll={() => onSelect([])}
-                  />
-                )}
+                <RecursiveOptions
+                  options={filteredOptions}
+                  selected={selected}
+                  onOptionSelect={handleOptionSelect}
+                  multiple={multiple}
+                  isSmall={isSmall}
+                  optionTooltip={optionTooltip}
+                />
 
-              {filteredOptions.length === 0 && <CommandEmpty />}
-            </CommandList>
-          </CommandLibrary>
-              </TooltipProvider>
-
+                {filteredOptions.length === 0 && <CommandEmpty />}
+              </CommandList>
+            </CommandLibrary>
+            </TooltipProvider>
         </PopoverContent>
       </Popover>
     </div>
