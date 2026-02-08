@@ -26,8 +26,8 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
   });
 
   return (
-    <div className="relative flex items-center justify-between px-4 pt-2 pb-4 gap-2 border-b pr-8">
-      <div className="flex flex-wrap gap-2">
+    <div className="relative px-4 pt-2 pb-4 border-b pr-8 min-w-0">
+      <div className="flex flex-wrap gap-2 min-w-0">
         {sortedSelected.map((option) => (
           <span
             key={getOptionValue(option)}
@@ -35,10 +35,12 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
               e.stopPropagation();
               onRemove(option);
             }}
-            className="flex items-center bg-primary-400/10 text-[10px] px-1 py-0.5 rounded-sm cursor-pointer hover:bg-gray-200 transition"
+            className="flex items-center bg-primary-400/10 text-[10px] px-1 py-0.5 rounded-sm cursor-pointer hover:bg-gray-200 transition shrink-0"
           >
-            {typeof option === "object" ? option.label : option}
-            <FAIcon icon="close" className="h-2 w-2 ml-1 text-primary-600" />
+            <span className="truncate max-w-[150px]">
+              {typeof option === "object" ? option.label : option}
+            </span>
+            <FAIcon icon="close" className="h-2 w-2 ml-1 text-primary-600 flex-shrink-0" />
           </span>
         ))}
       </div>

@@ -59,19 +59,29 @@ const AddButtons = ({ onAddCondition, onAddGroup, canAddGroup = true, level = 0 
 };
 
 const LogicSelector = ({ value, onChange }) => (
-  <Select defaultValue={value.toUpperCase()} onValueChange={(val) => onChange(val.toLowerCase())}>
+  <Select
+    value={value.toUpperCase()}
+    onValueChange={(val) => onChange(val.toLowerCase())}
+  >
     <SelectTrigger
       iconClassName="h-3 w-3 text-gray-500"
-      className="border-0 border-b-[1px] shadow-none focus:ring-0 text-sm pl-0 text-gray-600 w-[55px]"
+      className="
+        border-0 border-b
+        shadow-none focus:ring-0
+        text-sm pl-0 text-gray-600
+        w-auto inline-flex gap-1
+      "
     >
       <SelectValue />
     </SelectTrigger>
+
     <SelectContent>
       <SelectItem value="AND">and</SelectItem>
       <SelectItem value="OR">or</SelectItem>
     </SelectContent>
   </Select>
 );
+
 
 const FilterGroup = ({
   group,
