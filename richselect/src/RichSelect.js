@@ -14,6 +14,7 @@ import {
 import { cn, Spinner } from "@ankamala/core";
 import { FAIcon } from "@ankamala/core";
 import { Tooltip, TooltipProvider } from "@ankamala/core";
+
 // Helpers
 const getOptionValue = (option) => (typeof option === "object" ? option.path : option);
 
@@ -25,8 +26,8 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
   });
 
   return (
-    <div className="relative flex items-center justify-between px-4 pt-2 pb-4 gap-2 border-b pr-8">
-      <div className="flex flex-wrap gap-2">
+    <div className="relative px-4 pt-2 pb-4 border-b pr-8 w-full overflow-hidden">
+      <div className="flex flex-wrap gap-2 w-full">
         {sortedSelected.map((option) => (
           <span
             key={getOptionValue(option)}
@@ -36,8 +37,10 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
             }}
             className="flex items-center bg-primary-400/10 text-[10px] px-1 py-0.5 rounded-sm cursor-pointer hover:bg-gray-200 transition"
           >
-            {typeof option === "object" ? option.label : option}
-            <FAIcon icon="close" className="h-2 w-2 ml-1 text-primary-600" />
+            <span className="truncate max-w-[120px]">
+              {typeof option === "object" ? option.label : option}
+            </span>
+            <FAIcon icon="close" className="h-2 w-2 ml-1 text-primary-600 flex-shrink-0" />
           </span>
         ))}
       </div>
@@ -232,10 +235,10 @@ const RichSelect = ({
         >
           {children ? children : trigger(selected)}
         </PopoverTrigger>
-        <PopoverContent align="start" sideOffset={4} className={cn("bg-white border w-auto", !isShadow && "shadow-none")}>
+        <PopoverContent align="start" sideOffset={4} className={cn("bg-white border w-auto max-w-fit", !isShadow && "shadow-none")}>
               <TooltipProvider>
 
-          <CommandLibrary shouldFilter={false}>
+          <CommandLibrary shouldFilter={false} className="w-full">
             {isSearchable && (
               <CommandInput
                 placeholder={searchPlaceholder}
