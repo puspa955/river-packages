@@ -1,7 +1,6 @@
-// RichSelect.js
 "use client"
 
-import { useState } from "react"; // <- no direct React import for library bundling
+import { useState } from "react";
 import { Popover, PopoverTrigger, PopoverContent } from "@ankamala/core";
 import {
   CommandLibrary,
@@ -26,7 +25,7 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
   });
 
   return (
-    <div className="relative px-4 pt-2 pb-4 border-b pr-8 w-full overflow-hidden">
+    <div className="relative px-4 pt-4 pb-2 border-t pr-8 w-full overflow-hidden">
       <div className="flex flex-wrap gap-2 w-full">
         {sortedSelected.map((option) => (
           <span
@@ -248,15 +247,6 @@ const RichSelect = ({
             )}
 
             <CommandList>
-              {multiple && selected.length > 0 &&
-                (showSelectedSummary === "always" || (showSelectedSummary !== false && options.length > 6)) && (
-                  <SelectedOptionsDisplay
-                    selected={selected}
-                    onRemove={handleOptionSelect}
-                    onClearAll={() => onSelect([])}
-                  />
-                )}
-
               <RecursiveOptions
                 options={filteredOptions}
                 selected={selected}
@@ -265,6 +255,15 @@ const RichSelect = ({
                 isSmall={isSmall}
                 optionTooltip={optionTooltip}
               />
+
+              {multiple && selected.length > 0 &&
+                (showSelectedSummary === "always" || (showSelectedSummary !== false && options.length > 6)) && (
+                  <SelectedOptionsDisplay
+                    selected={selected}
+                    onRemove={handleOptionSelect}
+                    onClearAll={() => onSelect([])}
+                  />
+                )}
 
               {filteredOptions.length === 0 && <CommandEmpty />}
             </CommandList>
