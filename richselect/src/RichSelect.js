@@ -13,6 +13,7 @@ import {
 import { cn, Spinner } from "@ankamala/core";
 import { FAIcon } from "@ankamala/core";
 import { Tooltip, TooltipProvider } from "@ankamala/core";
+
 // Helpers
 const getOptionValue = (option) => (typeof option === "object" ? option.path : option);
 
@@ -34,12 +35,14 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
                 e.stopPropagation();
                 onRemove(option);
               }}
-              className="flex items-center bg-primary-400/10 text-[10px] px-1 py-0.5 rounded-sm cursor-pointer hover:bg-gray-200 transition flex-shrink-0"
+              // CHANGED: bg-primary-400/10 → bg-[var(--rs-accent-bg)]
+              //          text-primary-600  → text-[var(--rs-accent)]
+              className="flex items-center bg-[var(--rs-accent-bg)] text-[10px] px-1 py-0.5 rounded-sm cursor-pointer hover:bg-gray-200 transition flex-shrink-0"
             >
               <span className="truncate max-w-[120px]">
                 {typeof option === "object" ? option.label : option}
               </span>
-              <FAIcon icon="close" className="h-2 w-2 ml-1 text-primary-600 flex-shrink-0" />
+              <FAIcon icon="close" className="h-2 w-2 ml-1 text-[var(--rs-accent)] flex-shrink-0" />
             </span>
           ))}
         </div>
@@ -113,15 +116,17 @@ const RecursiveOptions = ({ options, selected, onOptionSelect, className, multip
             <CommandItem
               key={index}
               value={option.label}
+              // CHANGED: bg-primary-400/10 → bg-[var(--rs-accent-bg)]
               className={cn(
                 "px-4 cursor-pointer hover:bg-gray-100 font-light border-b border-gray-100 whitespace-nowrap",
-                isSelected && "bg-primary-400/10"
+                isSelected && "bg-[var(--rs-accent-bg)]"
               )}
               onSelect={() => onOptionSelect(option)}
             >
               <div className="flex justify-between items-center w-full gap-2">
                 <span className="whitespace-nowrap">{option.label}</span>
-                {isSelected && <FAIcon icon="check" className="text-primary-600 h-3 w-3 ml-2 flex-shrink-0" />}
+                {/* CHANGED: text-primary-600 → text-[var(--rs-accent)] */}
+                {isSelected && <FAIcon icon="check" className="text-[var(--rs-accent)] h-3 w-3 ml-2 flex-shrink-0" />}
               </div>
             </CommandItem>
           );
@@ -236,8 +241,7 @@ const RichSelect = ({
           {children ? children : trigger(selected)}
         </PopoverTrigger>
         <PopoverContent align="start" sideOffset={4} className={cn("bg-white border w-auto", !isShadow && "shadow-none")}>
-                        <TooltipProvider>
-
+          <TooltipProvider>
             <CommandLibrary shouldFilter={false}>
               {isSearchable && (
                 <CommandInput
@@ -269,7 +273,7 @@ const RichSelect = ({
                 {filteredOptions.length === 0 && <CommandEmpty />}
               </CommandList>
             </CommandLibrary>
-            </TooltipProvider>
+          </TooltipProvider>
         </PopoverContent>
       </Popover>
     </div>
