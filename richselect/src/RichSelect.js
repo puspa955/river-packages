@@ -92,9 +92,8 @@ const RecursiveOptions = ({ options, selected, onOptionSelect, className, multip
                 }
 
                 const isSelected = multiple || isSmall
-                ? Array.isArray(selected) && selected.some((item) => getOptionValue(item) === getOptionValue(option))
-                : selected && getOptionValue(selected) === getOptionValue(option);
-
+    ? Array.isArray(selected) && selected.some((item) => getOptionValue(item) === getOptionValue(option))
+    : selected && getOptionValue(selected) === getOptionValue(option);
 
                 if (option.options) {
                     return (
