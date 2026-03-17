@@ -1,19 +1,10 @@
 import React from "react";
 import FilterItem from "./FilterItem";
 import { FAIcon, Tooltip } from "@ankamala/core";
-import { 
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem
-} from "@ankamala/core";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@ankamala/core";
 import { cn } from "@ankamala/core";
 
-// Constants
 const MAX_NESTING_LEVEL = 2;
-
-// Utility functions
 const generateId = () => crypto?.randomUUID();
 
 const createCondition = (overrides = {}, defaultCondition) => ({
@@ -26,30 +17,47 @@ const createCondition = (overrides = {}, defaultCondition) => ({
 const createGroup = (children = [], operator = "and") => ({
   id: generateId(),
   isGroup: true,
-  operator: operator.toLowerCase(), 
-  rules: children, 
+  operator: operator.toLowerCase(),
+  rules: children,
 });
 
-export { createCondition, createGroup }; 
+export { createCondition, createGroup };
 
-// Subcomponents
+const hoverIn  = e => e.currentTarget.style.color = "var(--filter-primary, #4f46e5)";
+const hoverOut = e => e.currentTarget.style.color = "var(--filter-text-muted, #6b7280)";
+
 const AddButtons = ({ onAddCondition, onAddGroup, canAddGroup = true, level = 0 }) => {
   const isMaxLevel = level >= MAX_NESTING_LEVEL;
-  const baseButtonClass = "text-gray-600 font-medium cursor-pointer hover:text-primary-600 text-sm";
-  const disabledButtonClass = "text-gray-400 text-sm cursor-not-allowed";
 
   return (
     <div className="flex gap-4">
-      <span className={baseButtonClass} onClick={onAddCondition}>
+      <span
+        className="font-medium cursor-pointer text-sm transition-colors"
+        style={{ color: "var(--filter-text-muted, #6b7280)" }}
+        onMouseEnter={hoverIn}
+        onMouseLeave={hoverOut}
+        onClick={onAddCondition}
+      >
         + Add condition
       </span>
       {canAddGroup && (
         isMaxLevel ? (
-          <Tooltip tooltipText="Filter condition can only be nested three level deep">
-            <span className={disabledButtonClass}>+ Add condition group</span>
+          <Tooltip tooltipText="Filter condition can only be nested three levels deep">
+            <span
+              className="text-sm cursor-not-allowed"
+              style={{ color: "var(--filter-text-placeholder, #9ca3af)" }}
+            >
+              + Add condition group
+            </span>
           </Tooltip>
         ) : (
-          <span className={baseButtonClass} onClick={onAddGroup}>
+          <span
+            className="font-medium cursor-pointer text-sm transition-colors"
+            style={{ color: "var(--filter-text-muted, #6b7280)" }}
+            onMouseEnter={hoverIn}
+            onMouseLeave={hoverOut}
+            onClick={onAddGroup}
+          >
             + Add condition group
           </span>
         )
@@ -64,24 +72,21 @@ const LogicSelector = ({ value, onChange }) => (
     onValueChange={(val) => onChange(val.toLowerCase())}
   >
     <SelectTrigger
-      iconClassName="h-3 w-3 text-gray-500"
-      className="
-        border-0 border-b
-        shadow-none focus:ring-0
-        text-sm pl-0 text-gray-600
-        w-auto inline-flex gap-1
-      "
+      iconClassName="h-3 w-3"
+      className="border-0 border-b shadow-none focus:ring-0 text-sm pl-0 w-auto inline-flex gap-1"
+      style={{
+        color: "var(--filter-text-muted, #6b7280)",
+        borderColor: "var(--filter-input-border, #d1d5db)",
+      }}
     >
       <SelectValue />
     </SelectTrigger>
-
     <SelectContent>
       <SelectItem value="AND">and</SelectItem>
       <SelectItem value="OR">or</SelectItem>
     </SelectContent>
   </Select>
 );
-
 
 const FilterGroup = ({
   group,
@@ -98,62 +103,59 @@ const FilterGroup = ({
   const children = group.rules || [];
   const logic = group.operator || group.logic || "and";
 
-  const updateChild = (id, updated) => {
-    const updatedChildren = children.map((child) => (child.id === id ? updated : child));
-    onChange({
-      ...group,
-      rules: updatedChildren,
-    });
-  };
+  const updateChild = (id, updated) =>
+    onChange({ ...group, rules: children.map(c => c.id === id ? updated : c) });
 
-  const removeChild = (id) => {
-    const filteredChildren = children.filter((child) => child.id !== id);
-    onChange({
-      ...group,
-      rules: filteredChildren,
-    });
-  };
+  const removeChild = (id) =>
+    onChange({ ...group, rules: children.filter(c => c.id !== id) });
 
-  const addToGroup = (item) => {
-    onChange({
-      ...group,
-      rules: [...children, item],
-    });
-  };
+  const addToGroup = (item) =>
+    onChange({ ...group, rules: [...children, item] });
 
-  const updateLogic = (newLogic) => {
-    onChange({
-       ...group,
-       operator: newLogic.toLowerCase(),
-    });
-  };
+  const updateLogic = (newLogic) =>
+    onChange({ ...group, operator: newLogic.toLowerCase() });
 
   const handleAddCondition = () => addToGroup(createCondition({}, defaultCondition));
-  const handleAddGroup = () => addToGroup(createGroup());
+  const handleAddGroup    = () => addToGroup(createGroup());
 
-  const showGroupStyling = !isRoot;
+  const showGroupStyling  = !isRoot;
   const showGroupControls = !isRoot;
   const isEmpty = children.length === 0;
 
   return (
     <div
-      className={cn(
-        "flex flex-col gap-4",
-        showGroupStyling && "rounded-sm py-2 px-4 border bg-gray-100"
-      )}
+      className={cn("flex flex-col gap-4", showGroupStyling && "rounded-sm py-2 px-4")}
+      style={showGroupStyling ? {
+        border: "1px solid var(--filter-border, #e5e7eb)",
+        background: "var(--filter-bg-group, #f3f4f6)",
+        borderRadius: "var(--filter-radius, 2px)",
+      } : {}}
     >
       {isEmpty && showGroupControls && (
-        <div className="text-sm font-light">Add conditions or sub-groups.</div>
+        <div
+          className="text-sm font-light"
+          style={{ color: "var(--filter-text-muted, #6b7280)" }}
+        >
+          Add conditions or sub-groups.
+        </div>
       )}
 
       {children.map((child, index) => (
         <div key={child.id} className="flex gap-2 items-start">
           {index === 0 ? (
-            <span className="w-[55px] pt-2 text-sm font-medium text-gray-700">Where</span>
+            <span
+              className="w-[55px] pt-2 text-sm font-medium"
+              style={{ color: "var(--filter-text, #1e293b)" }}
+            >
+              Where
+            </span>
           ) : index === 1 ? (
             <LogicSelector value={logic} onChange={updateLogic} />
           ) : (
-            <span className="w-[55px] pt-2 text-sm text-gray-700">
+            <span
+              className="w-[55px] pt-2 text-sm"
+              style={{ color: "var(--filter-text-muted, #6b7280)" }}
+            >
               {logic}
             </span>
           )}
@@ -189,7 +191,10 @@ const FilterGroup = ({
       ))}
 
       {showGroupControls && (
-        <div className="flex justify-between gap-10 items-center pt-2 border-t border-gray-200">
+        <div
+          className="flex justify-between gap-10 items-center pt-2"
+          style={{ borderTop: "1px solid var(--filter-border, #e5e7eb)" }}
+        >
           <AddButtons
             onAddCondition={handleAddCondition}
             onAddGroup={handleAddGroup}
@@ -198,7 +203,10 @@ const FilterGroup = ({
           <Tooltip tooltipText="Remove group">
             <button
               onClick={onRemove}
-              className="text-gray-600 hover:text-gray-900 transition-colors"
+              className="transition-colors"
+              style={{ color: "var(--filter-text-muted, #6b7280)" }}
+              onMouseEnter={e => e.currentTarget.style.color = "var(--filter-text, #1e293b)"}
+              onMouseLeave={e => e.currentTarget.style.color = "var(--filter-text-muted, #6b7280)"}
             >
               <FAIcon icon="multiply" />
             </button>
