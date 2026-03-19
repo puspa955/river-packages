@@ -317,32 +317,6 @@ FilterPopover uses CSS custom properties for theming. Add any of these to your `
 }
 ```
 
-### Example — Red Theme
-```css
-:root {
-  --filter-primary:          #dc2626;
-  --filter-primary-hover:    #b91c1c;
-  --filter-primary-text:     #ffffff;
-
-  --filter-bg:               #fff5f5;
-  --filter-bg-group:         #fee2e2;
-
-  --filter-border:           #fecaca;
-  --filter-border-top:       #dc2626;
-
-  --filter-text:             #1e293b;
-  --filter-text-muted:       #6b7280;
-  --filter-text-placeholder: #9ca3af;
-
-  --filter-input-border:     #fca5a5;
-
-  --filter-badge-bg:         #dc2626;
-  --filter-badge-text:       #ffffff;
-
-  --filter-radius:           2px;
-}
-```
-
 ---
 
 ## Nesting
