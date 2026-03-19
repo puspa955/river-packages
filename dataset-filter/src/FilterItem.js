@@ -1,39 +1,77 @@
-import { useCallback, useMemo, useState } from 'react';
-import { Search, X } from 'lucide-react';
-import { FilterSection } from './FilterSection';
+import { useCallback, useMemo, useState } from "react";
+import { SearchIcon, XIcon } from "./icons";
+import { FilterSection } from "./FilterSection";
 
+/* ─────────────────────────────────────────
+   CheckboxItem
+───────────────────────────────────────── */
 export const CheckboxItem = ({ checked, onChange, label }) => {
+  const [hovered, setHovered] = useState(false);
+
   return (
-    <label className="flex items-start gap-3 cursor-pointer group w-fit">
+    <label
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        display: "flex",
+        alignItems: "flex-start",
+        gap: 8,
+        cursor: "pointer",
+        padding: "3px 0",
+        width: "fit-content",
+      }}
+    >
       <input
         type="checkbox"
         checked={checked}
         onChange={onChange}
-        className="mt-0.5 w-4 h-4 rounded-sm border-gray-300 accent-primary-600 focus:ring-primary-500 cursor-pointer transition-colors group-hover:border-primary-600"
+        style={{
+          marginTop: 2,
+          width: 14,
+          height: 14,
+          cursor: "pointer",
+          flexShrink: 0,
+          accentColor: "var(--dsf-primary, #3b6fd4)",
+        }}
       />
-      <span className="text-sm text-gray-900 font-light group-hover:text-primary-600 transition-colors">
+      <span style={{
+        fontSize: 13,
+        color: hovered
+          ? "var(--dsf-primary, #3b6fd4)"
+          : "var(--dsf-text-primary, #0f1923)",
+        fontFamily: "var(--dsf-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
+        transition: "color 0.15s",
+        lineHeight: 1.4,
+        userSelect: "none",
+      }}>
         {label}
       </span>
     </label>
   );
 };
 
+/* ─────────────────────────────────────────
+   CheckboxGroupFilter
+───────────────────────────────────────── */
 export const CheckboxGroupFilter = ({ config = {}, value = [], onChange, isNested = false }) => {
   const [showAll, setShowAll] = useState(false);
-  
+  const [btnHovered, setBtnHovered] = useState(false);
+
   const toggleOption = useCallback((option) => {
-    const newValue = value.includes(option) ? value.filter(v => v !== option) : [...value, option];
-    onChange(newValue.length ? newValue : undefined);
+    const next = value.includes(option)
+      ? value.filter(v => v !== option)
+      : [...value, option];
+    onChange(next.length ? next : undefined);
   }, [value, onChange]);
 
   if (!config.options || config.options.length === 0) return null;
 
   const MAX_VISIBLE = 5;
-  const visibleOptions = showAll ? config.options : config.options.slice(0, MAX_VISIBLE);
+  const visible = showAll ? config.options : config.options.slice(0, MAX_VISIBLE);
 
   return (
     <FilterSection label={config.label} isNested={isNested}>
-      {visibleOptions.map(option => (
+      {visible.map(option => (
         <CheckboxItem
           key={option}
           label={option}
@@ -44,21 +82,38 @@ export const CheckboxGroupFilter = ({ config = {}, value = [], onChange, isNeste
 
       {config.options.length > MAX_VISIBLE && (
         <button
-          onClick={() => setShowAll(!showAll)}
-          className="mt-2 text-primary-600 hover:text-primary-500 text-xs inline-flex items-center gap-1 underline"
+          onClick={() => setShowAll(v => !v)}
+          onMouseEnter={() => setBtnHovered(true)}
+          onMouseLeave={() => setBtnHovered(false)}
+          style={{
+            all: "unset",
+            marginTop: 4,
+            fontSize: 12,
+            color: btnHovered
+              ? "var(--dsf-primary-hover, #2d5bbf)"
+              : "var(--dsf-primary, #3b6fd4)",
+            cursor: "pointer",
+            textDecoration: "underline",
+            fontFamily: "var(--dsf-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
+            transition: "color 0.15s",
+          }}
         >
-          {showAll ? 'See less' : 'See all'}
+          {showAll ? "See less" : `See all (${config.options.length})`}
         </button>
       )}
     </FilterSection>
   );
 };
 
-
+/* ─────────────────────────────────────────
+   RangeFilter
+───────────────────────────────────────── */
 export const RangeFilter = ({ config, value = [], onChange, isNested = false }) => {
   const toggleRange = useCallback((label) => {
-    const newValue = value.includes(label) ? value.filter(v => v !== label) : [...value, label];
-    onChange(newValue.length ? newValue : undefined);
+    const next = value.includes(label)
+      ? value.filter(v => v !== label)
+      : [...value, label];
+    onChange(next.length ? next : undefined);
   }, [value, onChange]);
 
   if (!config.ranges?.length) return null;
@@ -77,18 +132,22 @@ export const RangeFilter = ({ config, value = [], onChange, isNested = false }) 
   );
 };
 
-export const CheckboxFilter = ({ config, value = false, onChange }) => {
-  return (
-    <div>
-      <CheckboxItem
-        checked={!!value}
-        onChange={(e) => onChange(e.target.checked ? true : undefined)}
-        label={config.label}
-      />
-    </div>
-  );
-};
+/* ─────────────────────────────────────────
+   CheckboxFilter  (standalone boolean)
+───────────────────────────────────────── */
+export const CheckboxFilter = ({ config, value = false, onChange }) => (
+  <div style={{ padding: "2px 0" }}>
+    <CheckboxItem
+      checked={!!value}
+      onChange={e => onChange(e.target.checked ? true : undefined)}
+      label={config.label}
+    />
+  </div>
+);
 
+/* ─────────────────────────────────────────
+   NestedGroupFilter
+───────────────────────────────────────── */
 export const NestedGroupFilter = ({ config, filters, onFilterChange, defaultExpanded = true }) => {
   if (!config.children || config.children.length === 0) return null;
 
@@ -104,8 +163,8 @@ export const NestedGroupFilter = ({ config, filters, onFilterChange, defaultExpa
               key={childKey}
               config={childConfig}
               value={filters[childKey]}
-              onChange={(val) => onFilterChange(childKey, val)}
-              isNested={true}
+              onChange={val => onFilterChange(childKey, val)}
+              isNested
             />
           );
         }
@@ -116,8 +175,8 @@ export const NestedGroupFilter = ({ config, filters, onFilterChange, defaultExpa
               key={childKey}
               config={childConfig}
               value={filters[childKey]}
-              onChange={(val) => onFilterChange(childKey, val)}
-              isNested={true}
+              onChange={val => onFilterChange(childKey, val)}
+              isNested
             />
           );
         }
@@ -128,20 +187,20 @@ export const NestedGroupFilter = ({ config, filters, onFilterChange, defaultExpa
   );
 };
 
+/* ─────────────────────────────────────────
+   FilterBadges
+───────────────────────────────────────── */
 export const FilterBadges = ({ schema, filters, onRemove }) => {
   const badges = useMemo(() => {
     const result = [];
-
-    const extractBadges = (schemaObj) => {
+    const extract = (schemaObj) => {
       Object.entries(schemaObj).forEach(([key, config]) => {
         if (config.type === "group" && config.childrenSchema) {
-          extractBadges(config.childrenSchema);
+          extract(config.childrenSchema);
           return;
         }
-
         const value = filters[key];
         if (!value) return;
-
         if (config.type === "search") {
           result.push({ key, label: value, type: "search" });
         } else if (config.type === "checkbox" && value === true) {
@@ -151,63 +210,171 @@ export const FilterBadges = ({ schema, filters, onRemove }) => {
         }
       });
     };
-
-    extractBadges(schema);
+    extract(schema);
     return result;
   }, [schema, filters]);
 
   if (!badges.length) return null;
 
   return (
-    <div className="flex flex-wrap gap-2 mt-3">
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
       {badges.map(badge => (
-        <span key={`${badge.key}-${badge.value || ''}`} className="inline-flex items-center gap-1.5 px-2 py-1 bg-primary-100/80 text-gray-700 text-sm border">
-          <span>{badge.label}</span>
-          <button onClick={() => onRemove(badge)} className="hover:text-primary-600 rounded-full p-0.5 transition-colors">
-            <X className="w-3.5 h-3.5" />
-          </button>
-        </span>
+        <BadgeItem key={`${badge.key}-${badge.value || ""}`} badge={badge} onRemove={onRemove} />
       ))}
     </div>
   );
 };
 
-export const SearchHeader = ({ schema, filters, onFilterChange }) => {
-  const searchConfigEntry = Object.entries(schema).find(([_, c]) => c.type === "search");
-  if (!searchConfigEntry) return null;
+const BadgeItem = ({ badge, onRemove }) => {
+  const [hovered, setHovered] = useState(false);
 
-  const [searchKey, searchSchema] = searchConfigEntry;
+  return (
+    <span style={{
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4,
+      padding: "3px 6px 3px 10px",
+      background: "var(--dsf-badge-bg, #eff4ff)",
+      color: "var(--dsf-badge-text, #1e3fa8)",
+      border: "1px solid var(--dsf-badge-border, #c0d0f5)",
+      borderRadius: "var(--dsf-radius, 5px)",
+      fontSize: 12,
+      fontFamily: "var(--dsf-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
+      fontWeight: 500,
+    }}>
+      <span>{badge.label}</span>
+      <button
+        onClick={() => onRemove(badge)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        aria-label={`Remove ${badge.label}`}
+        style={{
+          all: "unset",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 16,
+          height: 16,
+          borderRadius: "50%",
+          cursor: "pointer",
+          color: hovered
+            ? "var(--dsf-primary, #3b6fd4)"
+            : "var(--dsf-badge-text, #1e3fa8)",
+          transition: "color 0.15s",
+        }}
+      >
+        <XIcon size={11} />
+      </button>
+    </span>
+  );
+};
+
+/* ─────────────────────────────────────────
+   SearchHeader
+───────────────────────────────────────── */
+export const SearchHeader = ({ schema, filters, onFilterChange }) => {
+  const [focused, setFocused] = useState(false);
+
+  const searchEntry = Object.entries(schema).find(([, c]) => c.type === "search");
+  if (!searchEntry) return null;
+
+  const [searchKey, searchSchema] = searchEntry;
   const searchValue = filters[searchKey] || "";
 
   const removeBadge = (badge) => {
     if (badge.type === "search") onFilterChange(badge.key, "");
     else if (badge.type === "array") {
-      const newValues = (filters[badge.key] || []).filter(v => v !== badge.value);
-      onFilterChange(badge.key, newValues.length ? newValues : undefined);
+      const next = (filters[badge.key] || []).filter(v => v !== badge.value);
+      onFilterChange(badge.key, next.length ? next : undefined);
     } else if (badge.type === "checkbox") {
       onFilterChange(badge.key, undefined);
     }
   };
 
   return (
-    <div className="mb-6">
-      <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+    <div style={{ marginBottom: 20 }}>
+      <div style={{ position: "relative" }}>
+        {/* search icon */}
+        <span style={{
+          position: "absolute",
+          left: 10,
+          top: "50%",
+          transform: "translateY(-50%)",
+          color: focused
+            ? "var(--dsf-primary, #3b6fd4)"
+            : "var(--dsf-text-muted, #8e99a4)",
+          display: "flex",
+          alignItems: "center",
+          pointerEvents: "none",
+          transition: "color 0.15s",
+        }}>
+          <SearchIcon size={15} />
+        </span>
+
         <input
           type="text"
-          placeholder={searchSchema.placeholder}
+          placeholder={searchSchema.placeholder || "Search…"}
           value={searchValue}
-          onChange={(e) => onFilterChange(searchKey, e.target.value)}
-          className="w-full pl-10 pr-10 py-3 border border-gray-400/70 focus:ring-1 focus:ring-primary-500 focus:border-transparent outline-none text-sm"
+          onChange={e => onFilterChange(searchKey, e.target.value)}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          style={{
+            width: "100%",
+            boxSizing: "border-box",
+            paddingLeft: 34,
+            paddingRight: searchValue ? 34 : 12,
+            paddingTop: 9,
+            paddingBottom: 9,
+            border: focused
+              ? "1px solid var(--dsf-border-focus, #3b6fd4)"
+              : "1px solid var(--dsf-border, #e2e5ea)",
+            boxShadow: focused
+              ? "0 0 0 3px var(--dsf-primary-light, #eff4ff)"
+              : "none",
+            borderRadius: "var(--dsf-radius, 5px)",
+            fontSize: 13,
+            fontFamily: "var(--dsf-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
+            color: "var(--dsf-text-primary, #0f1923)",
+            background: "#ffffff",
+            outline: "none",
+            transition: "border-color 0.15s, box-shadow 0.15s",
+          }}
         />
+
         {searchValue && (
-          <button onClick={() => onFilterChange(searchKey, "")} className="absolute right-3 top-1/2 -translate-y-1/2">
-            <X className="w-4 h-4 text-gray-400 hover:text-gray-600" />
-          </button>
+          <ClearButton onClick={() => onFilterChange(searchKey, "")} />
         )}
       </div>
 
       <FilterBadges schema={schema} filters={filters} onRemove={removeBadge} />
     </div>
+  );
+};
+
+const ClearButton = ({ onClick }) => {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      aria-label="Clear search"
+      style={{
+        all: "unset",
+        position: "absolute",
+        right: 10,
+        top: "50%",
+        transform: "translateY(-50%)",
+        display: "flex",
+        alignItems: "center",
+        cursor: "pointer",
+        color: hovered
+          ? "var(--dsf-text-secondary, #52616b)"
+          : "var(--dsf-text-muted, #8e99a4)",
+        transition: "color 0.15s",
+      }}
+    >
+      <XIcon size={14} />
+    </button>
   );
 };

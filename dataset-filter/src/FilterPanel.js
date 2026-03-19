@@ -1,9 +1,10 @@
-import React from 'react';
-import { ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { useState } from "react";
+import { SlidersIcon, ChevronDownIcon } from "./icons";
 import { CheckboxFilter, CheckboxGroupFilter, NestedGroupFilter, RangeFilter } from "./FilterItem";
 
 export const FilterPanel = ({ schema, filters, onFilterChange }) => {
-  const [generalExpanded, setGeneralExpanded] = React.useState(true);
+  const [generalExpanded, setGeneralExpanded] = useState(true);
+  const [generalHovered, setGeneralHovered] = useState(false);
 
   const renderFilter = (key, config) => {
     if (config.type === "search") return null;
@@ -25,7 +26,7 @@ export const FilterPanel = ({ schema, filters, onFilterChange }) => {
           key={key}
           config={config}
           value={filters[key]}
-          onChange={(value) => onFilterChange(key, value)}
+          onChange={value => onFilterChange(key, value)}
         />
       );
     }
@@ -36,7 +37,7 @@ export const FilterPanel = ({ schema, filters, onFilterChange }) => {
           key={key}
           config={config}
           value={filters[key]}
-          onChange={(value) => onFilterChange(key, value)}
+          onChange={value => onFilterChange(key, value)}
         />
       );
     }
@@ -49,36 +50,97 @@ export const FilterPanel = ({ schema, filters, onFilterChange }) => {
   );
 
   return (
-    <div className="w-72 bg-white border-r border-gray-200 h-screen overflow-y-auto p-6 sticky top-0 custom-scroll">
+    <aside style={{
+      width: "var(--dsf-panel-width, 272px)",
+      minWidth: "var(--dsf-panel-width, 272px)",
+      background: "var(--dsf-bg-panel, #ffffff)",
+      borderRight: "1px solid var(--dsf-border, #e2e5ea)",
+      height: "100vh",
+      overflowY: "auto",
+      padding: "20px 16px",
+      position: "sticky",
+      top: 0,
+      boxSizing: "border-box",
+      fontFamily: "var(--dsf-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
+    }}
+      className="dsf-panel"
+    >
       {/* Header */}
-      <div className="flex items-center gap-2 mb-6">
-        <SlidersHorizontal className="w-5 h-5 text-primary-600" />
-        <h2 className="text-lg font-semibold text-gray-900 tracking-tight">Filters</h2>
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        marginBottom: 20,
+        paddingBottom: 16,
+        borderBottom: "1px solid var(--dsf-border, #e2e5ea)",
+      }}>
+        <span style={{ color: "var(--dsf-primary, #3b6fd4)", display: "flex" }}>
+          <SlidersIcon size={16} />
+        </span>
+        <h2 style={{
+          margin: 0,
+          fontSize: 15,
+          fontWeight: 700,
+          color: "var(--dsf-text-primary, #0f1923)",
+          letterSpacing: "-0.01em",
+          fontFamily: "var(--dsf-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
+        }}>
+          Filters
+        </h2>
       </div>
 
       {/* General group for standalone checkboxes */}
       {standaloneCheckboxes.length > 0 && (
-        <div className="pb-3 mb-3 border-b border-gray-200">
+        <div style={{
+          borderBottom: "1px solid var(--dsf-border, #e2e5ea)",
+          marginBottom: 4,
+        }}>
           <button
-            onClick={() => setGeneralExpanded(!generalExpanded)}
-            className="w-full flex items-center justify-between group"
+            onClick={() => setGeneralExpanded(v => !v)}
+            onMouseEnter={() => setGeneralHovered(true)}
+            onMouseLeave={() => setGeneralHovered(false)}
+            aria-expanded={generalExpanded}
+            style={{
+              all: "unset",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
+              padding: "8px 0",
+              cursor: "pointer",
+              boxSizing: "border-box",
+            }}
           >
-            <h3 className="text-[13px] font-semibold text-gray-800 tracking-wide uppercase">
+            <span style={{
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: "0.08em",
+              textTransform: "uppercase",
+              color: "var(--dsf-text-secondary, #52616b)",
+              fontFamily: "var(--dsf-font, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif)",
+            }}>
               General
-            </h3>
-            <ChevronDown 
-              className={`w-5 h-5 text-gray-600 hover:text-primary-600 transition-transform ${generalExpanded ? 'rotate-180' : ''}`} 
+            </span>
+            <ChevronDownIcon
+              size={14}
+              style={{
+                color: generalHovered
+                  ? "var(--dsf-primary, #3b6fd4)"
+                  : "var(--dsf-text-muted, #8e99a4)",
+                transition: "transform 0.2s ease, color 0.15s",
+                transform: generalExpanded ? "rotate(180deg)" : "rotate(0deg)",
+              }}
             />
           </button>
 
           {generalExpanded && (
-            <div className="space-y-0.5 mt-2">
+            <div style={{ display: "flex", flexDirection: "column", gap: 1, paddingBottom: 8 }}>
               {standaloneCheckboxes.map(([key, config]) => (
                 <CheckboxFilter
                   key={key}
                   config={config}
                   value={filters[key]}
-                  onChange={(val) => onFilterChange(key, val)}
+                  onChange={val => onFilterChange(key, val)}
                 />
               ))}
             </div>
@@ -86,7 +148,8 @@ export const FilterPanel = ({ schema, filters, onFilterChange }) => {
         </div>
       )}
 
+      {/* All other filters */}
       {Object.entries(schema).map(([key, config]) => renderFilter(key, config))}
-    </div>
+    </aside>
   );
 };
