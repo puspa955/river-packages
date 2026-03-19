@@ -1,12 +1,40 @@
 {
   "name": "@ankamala/ui-libraries",
   "version": "1.0.0",
+  "private": false,
+  "files": [
+    "core/dist",
+    "filter/dist",
+    "richselect/dist",
+    "dataset-filter/dist",
+    "core/package.json",
+    "filter/package.json",
+    "richselect/package.json",
+    "dataset-filter/package.json"
+  ],
+  "exports": {
+    "./core": {
+      "import": "./core/dist/index.esm.js",
+      "require": "./core/dist/index.js"
+    },
+    "./filter": {
+      "import": "./filter/dist/index.esm.js",
+      "require": "./filter/dist/index.js"
+    },
+    "./richselect": {
+      "import": "./richselect/dist/index.esm.js",
+      "require": "./richselect/dist/index.js"
+    },
+    "./dataset-filter": {
+      "import": "./dataset-filter/dist/index.esm.js",
+      "require": "./dataset-filter/dist/index.js"
+    }
+  },
   "peerDependencies": {
     "@tanstack/react-query": "^5.0.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
-  "private": true,
   "workspaces": [
     "core",
     "filter",
