@@ -6,7 +6,7 @@ A flexible, theme-aware dropdown select component for React. Supports single sel
 
 ## Installation
 ```bash
-npm install git+https://github.com/puspa955/river-packages.git
+npm install git+https://github.com/puspa955/river-packages.git#main
 ```
 
 ---
