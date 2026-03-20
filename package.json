@@ -6,7 +6,31 @@
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
-  "private": true,
+  "private": false,
+  "files": [
+    "core/dist",
+    "filter/dist",
+    "richselect/dist",
+    "dataset-filter/dist",
+    "core/package.json",
+    "filter/package.json",
+    "richselect/package.json",
+    "dataset-filter/package.json"
+  ],
+  "exports": {
+    "./core": {
+      "import": "./core/dist/index.esm.js",
+      "require": "./core/dist/index.js"
+    },
+    "./filter": {
+      "import": "./filter/dist/index.esm.js",
+      "require": "./filter/dist/index.js"
+    },
+    "./table": {
+      "import": "./table/dist/index.esm.js",
+      "require": "./table/dist/index.js"
+    }
+  },
   "workspaces": [
     "core",
     "table",
@@ -17,7 +41,9 @@
     "build:core": "cd core && npm run build",
     "build:table": "cd table && npm run build",
     "build:filter": "cd filter && npm run build",
-    "build:all": "npm run build:core && npm run build:table && npm run build:filter"
+    "build:all": "npm run build:core && npm run build:table && npm run build:filter",
+    "prepare": "npm run build:all"
+
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",

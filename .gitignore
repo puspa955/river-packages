@@ -37,3 +37,7 @@ next-env.d.ts
 
 # OS
 Thumbs.db
+
+core/dist/
+filter/dist/
+table/dist/

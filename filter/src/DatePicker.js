@@ -19,30 +19,35 @@ export function DatePicker({
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
-          className={cn(
-            "text-xs border-0 border-b-[1px] shadow-none p-1 justify-start text-left font-normal",
-            !value && "text-slate-500",
-            className 
-          )}
-        >
+  variant={"outline"}
+  className={cn(
+    "text-xs border-0 border-b-[1px] shadow-none p-1 justify-start text-left font-normal",
+    !value && "text-slate-500",
+    className
+  )}
+  style={{
+    borderColor: "var(--filter-input-border, #d1d5db)",
+    color: value ? "var(--filter-text, #1e293b)" : "var(--filter-text-placeholder, #9ca3af)",
+  }}
+>
           {value ? formattedDate : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-0 w-auto" align="start">
-        <Calendar
-          className={cn("bg-gray-100", calendarClassName)}
-          classNames={{
-            head_cell: "h-8 w-8 text-sm font-medium",
-            cell: "h-8 w-8 text-slate-600",
-          }}
-          mode="single"
-          selected={value}
-          onSelect={(e) => {
-            onChange(e);
-          }}
-          initialFocus
-        />
+       <Calendar
+  className={cn("bg-gray-100", calendarClassName)}
+  style={{ borderTopColor: "var(--filter-primary, #4f46e5)" }}
+  classNames={{
+    head_cell: "h-8 w-8 text-sm font-medium",
+    cell: "h-8 w-8 text-slate-600",
+    day_selected: "bg-[var(--filter-primary,#4f46e5)] !text-white hover:bg-[var(--filter-primary,#4f46e5)] hover:!text-white focus:bg-[var(--filter-primary,#4f46e5)] focus:!text-white",
+    day_today: "text-[color:var(--filter-primary,#4f46e5)] font-medium",
+  }}
+  mode="single"
+  selected={value}
+  onSelect={(e) => onChange(e)}
+  initialFocus
+/>
       </PopoverContent>
     </Popover>
   );
