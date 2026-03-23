@@ -10,8 +10,10 @@
   "files": [
     "core/dist",
     "filter/dist",
+    "table/dist",
     "core/package.json",
-    "filter/package.json"
+    "filter/package.json",
+    "table/package.json"
   ],
   "exports": {
     "./core": {
