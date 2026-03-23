@@ -7,7 +7,7 @@ module.exports = {
     // Add your workspace packages
     './core/**/*.{js,ts,jsx,tsx}',
     './filter/**/*.{js,ts,jsx,tsx}',
-    './richselect/**/*.{js,ts,jsx,tsx}',
+    './table/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
