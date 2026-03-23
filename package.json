@@ -10,12 +10,8 @@
   "files": [
     "core/dist",
     "filter/dist",
-    "richselect/dist",
-    "dataset-filter/dist",
     "core/package.json",
-    "filter/package.json",
-    "richselect/package.json",
-    "dataset-filter/package.json"
+    "filter/package.json"
   ],
   "exports": {
     "./core": {
@@ -43,9 +39,9 @@
     "build:filter": "cd filter && npm run build",
     "build:all": "npm run build:core && npm run build:table && npm run build:filter",
     "prepare": "npm run build:all"
-
   },
   "dependencies": {
+    "@ankamala/ui-libraries": "github:puspa955/river-packages#main",
     "@fortawesome/fontawesome-svg-core": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.1.0",
