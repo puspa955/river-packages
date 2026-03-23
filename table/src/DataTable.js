@@ -13,7 +13,7 @@ import {
   ChevronDown,
   ChevronsUpDown,
 } from "lucide-react";
-import { FilterPopover, useFilter } from "@ankamala/filter";
+import { FilterPopover, useFilter } from "@ankamala/table/filter";
 import SearchBar from "./SearchBar";
 import TablePagination from "./TablePagination";
 import { normalizeData, LoadingState, EmptyState, ErrorState, generateFilterOptions } from "./utils/tableUtils";
@@ -30,7 +30,7 @@ export default function DataTable({
   pageSize = 10,
   rowsPerPageOptions = [5, 10, 25, 50],
   tableTitle = "Data",
-  tableSubtitle, 
+  tableSubtitle,
   onRowClick,
   className = "",
   stickyHeader = false,
@@ -103,24 +103,39 @@ export default function DataTable({
 
   return (
     <div className={`w-full ${className}`}>
-      <div className="bg-white rounded-sm border border-slate-200 shadow-lg overflow-hidden">
+      <div
+        className="rounded-sm overflow-hidden"
+        style={{
+          backgroundColor: 'var(--table-bg, #ffffff)',
+          border: '1px solid var(--table-border, #e2e8f0)',
+          boxShadow: 'var(--table-shadow, 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1))',
+        }}
+      >
         {/* Header */}
         {(tableTitle || enableSearch || enableFilter) && (
-          <div className="px-6 py-5 bg-slate-50">
+          <div
+            className="px-6 py-5"
+            style={{ backgroundColor: 'var(--table-header-bg, #f8fafc)' }}
+          >
             <div className="flex items-center justify-between gap-6">
               {tableTitle && (
-            <div className="flex-shrink-0">
-                <h2 className="text-xl font-semibold text-slate-900">
-                {tableTitle}
-                </h2>
-
-            {tableSubtitle && (
-            <p className="text-sm text-slate-500 mt-1">
-                {tableSubtitle}
-            </p>
-            )}
-        </div>
-        )}
+                <div className="flex-shrink-0">
+                  <h2
+                    className="text-xl font-semibold"
+                    style={{ color: 'var(--table-text-primary, #0f172a)' }}
+                  >
+                    {tableTitle}
+                  </h2>
+                  {tableSubtitle && (
+                    <p
+                      className="text-sm mt-1"
+                      style={{ color: 'var(--table-text-muted, #64748b)' }}
+                    >
+                      {tableSubtitle}
+                    </p>
+                  )}
+                </div>
+              )}
 
               <div className="flex items-center gap-3 flex-1 justify-end">
                 {enableSearch && !loading && !error && (
@@ -140,53 +155,77 @@ export default function DataTable({
             <ErrorState error={error} onRetry={() => typeof data === "string" && setTableData([])} />
           ) : (
             <table className="w-full">
-              <thead className={`bg-slate-50 backdrop-blur-sm ${stickyHeader ? "sticky top-0 z-10" : ""}`}>
+              <thead
+                className={`backdrop-blur-sm ${stickyHeader ? "sticky top-0 z-10" : ""}`}
+                style={{ backgroundColor: 'var(--table-header-bg, #f8fafc)' }}
+              >
                 {table.getHeaderGroups().map((hg) => (
-                  <tr key={hg.id} className="border-b-2 border-slate-200">
+                  <tr
+                    key={hg.id}
+                    style={{ borderBottom: '2px solid var(--table-border-header, #e2e8f0)' }}
+                  >
                     {hg.headers.map((h) => (
                       <th
                         key={h.id}
-                        className="px-6 py-4 text-left text-xs font-semibold text-slate-700 uppercase tracking-wider"
+                        className="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider"
+                        style={{ color: 'var(--table-text-header, #334155)' }}
                       >
-                        {h.isPlaceholder
-                          ? null
-                          : (
-                            <div
-                              className={`flex items-center gap-2 ${h.column.getCanSort() ? "cursor-pointer select-none group" : ""}`}
-                              onClick={h.column.getToggleSortingHandler()}
-                            >
-                              {flexRender(h.column.columnDef.header, h.getContext())}
-                              {enableSorting && h.column.getCanSort() && (
-                                <span className="text-slate-400 group-hover:text-slate-600 transition-colors">
-                                  {h.column.getIsSorted() === "asc" ? (
-                                    <ChevronUp className="w-4 h-4 text-primary-600" />
-                                  ) : h.column.getIsSorted() === "desc" ? (
-                                    <ChevronDown className="w-4 h-4 text-primary-600" />
-                                  ) : (
-                                    <ChevronsUpDown className="w-4 h-4" />
-                                  )}
-                                </span>
-                              )}
-                            </div>
-                          )}
+                        {h.isPlaceholder ? null : (
+                          <div
+                            className={`flex items-center gap-2 ${h.column.getCanSort() ? "cursor-pointer select-none group" : ""}`}
+                            onClick={h.column.getToggleSortingHandler()}
+                          >
+                            {flexRender(h.column.columnDef.header, h.getContext())}
+                            {enableSorting && h.column.getCanSort() && (
+                              <span className="transition-colors" style={{ color: 'var(--table-text-muted, #94a3b8)' }}>
+                                {h.column.getIsSorted() === "asc" ? (
+                                  <ChevronUp className="w-4 h-4" style={{ color: 'var(--table-primary, #4f46e5)' }} />
+                                ) : h.column.getIsSorted() === "desc" ? (
+                                  <ChevronDown className="w-4 h-4" style={{ color: 'var(--table-primary, #4f46e5)' }} />
+                                ) : (
+                                  <ChevronsUpDown className="w-4 h-4" />
+                                )}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </th>
                     ))}
                   </tr>
                 ))}
               </thead>
 
-              <tbody className="divide-y divide-slate-100">
+              <tbody>
                 {tableData.length > 0 && hasResults ? (
                   table.getRowModel().rows.map((row, idx) => (
                     <tr
                       key={row.id}
                       onClick={() => onRowClick?.(row.original)}
-                      className={`transition-all ${
-                        zebraStripes && idx % 2 === 1 ? "bg-slate-50/40" : "bg-white"
-                      } ${onRowClick ? "cursor-pointer hover:bg-primary-50/50 hover:shadow-sm" : "hover:bg-slate-50/50"}`}
+                      className="transition-all"
+                      style={{
+                        backgroundColor: zebraStripes && idx % 2 === 1
+                          ? 'var(--table-row-stripe-bg, rgba(248, 250, 252, 0.4))'
+                          : 'var(--table-bg, #ffffff)',
+                        borderBottom: '1px solid var(--table-border-row, #f1f5f9)',
+                        cursor: onRowClick ? 'pointer' : undefined,
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = onRowClick
+                          ? 'var(--table-row-hover-bg, rgba(238, 242, 255, 0.5))'
+                          : 'var(--table-row-hover-bg-neutral, rgba(248, 250, 252, 0.5))';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = zebraStripes && idx % 2 === 1
+                          ? 'var(--table-row-stripe-bg, rgba(248, 250, 252, 0.4))'
+                          : 'var(--table-bg, #ffffff)';
+                      }}
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <td key={cell.id} className="px-6 py-4 text-sm text-slate-700">
+                        <td
+                          key={cell.id}
+                          className="px-6 py-4 text-sm"
+                          style={{ color: 'var(--table-text-secondary, #334155)' }}
+                        >
                           {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </td>
                       ))}

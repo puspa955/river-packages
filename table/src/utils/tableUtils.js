@@ -1,8 +1,8 @@
-import { Loader2, AlertCircle, Search, Database } from "lucide-react";
+import { AlertCircle, Search, Database } from "lucide-react";
 
 export function getPageNumbers(currentPage, totalPages) {
   const pages = [];
-  const showPages = 5; 
+  const showPages = 5;
 
   if (totalPages <= showPages + 2) {
     for (let i = 0; i < totalPages; i++) {
@@ -36,16 +36,28 @@ export function getPageNumbers(currentPage, totalPages) {
   return pages;
 }
 
-
 export function LoadingState() {
   return (
     <div className="flex flex-col items-center justify-center py-20">
       <div className="relative">
-        <div className="w-16 h-16 border-4 border-slate-200 rounded-full"></div>
-        <div className="w-16 h-16 border-4 border-primary-600 rounded-full border-t-transparent animate-spin absolute top-0 left-0"></div>
+        <div
+          className="w-16 h-16 rounded-full"
+          style={{ border: '4px solid var(--table-loading-track, #e2e8f0)' }}
+        />
+        <div
+          className="w-16 h-16 rounded-full border-t-transparent animate-spin absolute top-0 left-0"
+          style={{ border: '4px solid var(--table-primary, #4f46e5)', borderTopColor: 'transparent' }}
+        />
       </div>
-      <h3 className="text-base font-semibold text-slate-900 mt-6 mb-1">Loading data</h3>
-      <p className="text-sm text-slate-500">Please wait while we fetch your data</p>
+      <h3
+        className="text-base font-semibold mt-6 mb-1"
+        style={{ color: 'var(--table-text-primary, #0f172a)' }}
+      >
+        Loading data
+      </h3>
+      <p className="text-sm" style={{ color: 'var(--table-text-muted, #64748b)' }}>
+        Please wait while we fetch your data
+      </p>
     </div>
   );
 }
@@ -53,15 +65,35 @@ export function LoadingState() {
 export function ErrorState({ error, onRetry }) {
   return (
     <div className="flex flex-col items-center justify-center py-20">
-      <div className="w-16 h-16 mb-4 rounded-full bg-red-50 flex items-center justify-center">
-        <AlertCircle className="w-8 h-8 text-red-600" />
+      <div
+        className="w-16 h-16 mb-4 rounded-full flex items-center justify-center"
+        style={{ backgroundColor: 'var(--table-error-bg, #fef2f2)' }}
+      >
+        <AlertCircle className="w-8 h-8" style={{ color: 'var(--table-error-icon, #dc2626)' }} />
       </div>
-      <h3 className="text-base font-semibold text-slate-900 mb-1">Unable to load data</h3>
-      <p className="text-sm text-slate-500 mb-6">{error}</p>
+      <h3
+        className="text-base font-semibold mb-1"
+        style={{ color: 'var(--table-text-primary, #0f172a)' }}
+      >
+        Unable to load data
+      </h3>
+      <p className="text-sm mb-6" style={{ color: 'var(--table-text-muted, #64748b)' }}>
+        {error}
+      </p>
       {onRetry && (
         <button
           onClick={onRetry}
-          className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-sm hover:bg-primary-700 transition-colors shadow-sm"
+          className="px-4 py-2 text-sm font-medium rounded-sm transition-colors"
+          style={{
+            backgroundColor: 'var(--table-primary, #4f46e5)',
+            color: 'var(--table-primary-text, #ffffff)',
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--table-primary-hover, #4338ca)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.backgroundColor = 'var(--table-primary, #4f46e5)';
+          }}
         >
           Try again
         </button>
@@ -73,13 +105,24 @@ export function ErrorState({ error, onRetry }) {
 export function EmptyState({ message = "No data available", isFiltered }) {
   return (
     <div className="flex flex-col items-center justify-center py-20">
-      <div className="w-16 h-16 mb-4 rounded-full bg-slate-50 flex items-center justify-center">
-        {isFiltered ? <Search className="w-8 h-8 text-slate-400" /> : <Database className="w-8 h-8 text-slate-400" />}
+      <div
+        className="w-16 h-16 mb-4 rounded-full flex items-center justify-center"
+        style={{ backgroundColor: 'var(--table-empty-bg, #f8fafc)' }}
+      >
+        {isFiltered
+          ? <Search className="w-8 h-8" style={{ color: 'var(--table-empty-icon, #94a3b8)' }} />
+          : <Database className="w-8 h-8" style={{ color: 'var(--table-empty-icon, #94a3b8)' }} />
+        }
       </div>
-      <h3 className="text-base font-semibold text-slate-900 mb-1">
+      <h3
+        className="text-base font-semibold mb-1"
+        style={{ color: 'var(--table-text-primary, #0f172a)' }}
+      >
         {isFiltered ? "No results found" : "No data available"}
       </h3>
-      <p className="text-sm text-slate-500">{isFiltered ? "Try adjusting your search or filters" : message}</p>
+      <p className="text-sm" style={{ color: 'var(--table-text-muted, #64748b)' }}>
+        {isFiltered ? "Try adjusting your search or filters" : message}
+      </p>
     </div>
   );
 }

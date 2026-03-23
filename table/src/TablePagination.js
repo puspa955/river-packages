@@ -18,50 +18,69 @@ export default function TablePagination({ table, rowsPerPageOptions = [5, 10, 25
   const pageNumbers = getPageNumbers(pageIndex, pageCount);
 
   return (
-    <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 bg-slate-50">
-      
+    <div
+      className="flex items-center justify-between px-6 py-4"
+      style={{
+        borderTop: '1px solid var(--table-border, #e2e8f0)',
+        backgroundColor: 'var(--table-footer-bg, #f8fafc)',
+      }}
+    >
+      {/* Results count */}
       <div className="flex items-center gap-2 text-sm min-w-[140px]">
-        <span className="text-slate-600">
-          Showing <span className="font-semibold text-slate-500">{startRow}</span> to{" "}
-          <span className="font-semibold text-slate-500">{endRow}</span> of{" "}
-          <span className="font-semibold text-slate-500">{totalRows}</span> results
+        <span style={{ color: 'var(--table-text-muted, #64748b)' }}>
+          Showing{" "}
+          <span className="font-semibold" style={{ color: 'var(--table-text-secondary, #475569)' }}>{startRow}</span>
+          {" "}to{" "}
+          <span className="font-semibold" style={{ color: 'var(--table-text-secondary, #475569)' }}>{endRow}</span>
+          {" "}of{" "}
+          <span className="font-semibold" style={{ color: 'var(--table-text-secondary, #475569)' }}>{totalRows}</span>
+          {" "}results
         </span>
       </div>
 
+      {/* Page buttons */}
       <div className="flex items-center gap-1">
-        <button
+        <PaginationIconBtn
           onClick={() => table.setPageIndex(0)}
           disabled={!table.getCanPreviousPage()}
-          className="p-2 rounded-sm border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white transition-all"
           aria-label="First page"
         >
-          <ChevronsLeft className="w-4 h-4 text-slate-600" />
-        </button>
+          <ChevronsLeft className="w-4 h-4" style={{ color: 'var(--table-text-secondary, #475569)' }} />
+        </PaginationIconBtn>
 
-        <button
+        <PaginationIconBtn
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
-          className="p-2 rounded-sm border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white transition-all"
           aria-label="Previous page"
         >
-          <ChevronLeft className="w-4 h-4 text-slate-600" />
-        </button>
+          <ChevronLeft className="w-4 h-4" style={{ color: 'var(--table-text-secondary, #475569)' }} />
+        </PaginationIconBtn>
 
         <div className="flex items-center gap-1 mx-2">
           {pageNumbers.map((pageNum, idx) =>
             pageNum === 'ellipsis' ? (
               <div key={`ellipsis-${idx}`} className="px-2 flex items-center">
-                <span className="text-slate-400 font-medium">...</span>
+                <span className="font-medium" style={{ color: 'var(--table-text-muted, #94a3b8)' }}>...</span>
               </div>
             ) : (
               <button
                 key={pageNum}
                 onClick={() => table.setPageIndex(pageNum)}
-                className={`min-w-[2.5rem] h-10 px-3 rounded-sm font-medium text-sm transition-all ${
+                className="min-w-[2.5rem] h-10 px-3 rounded-sm font-medium text-sm transition-all"
+                style={
                   pageIndex === pageNum
-                    ? "bg-primary-700 text-white shadow-sm"
-                    : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 hover:border-slate-300"
-                }`}
+                    ? {
+                        backgroundColor: 'var(--table-primary, #4338ca)',
+                        color: 'var(--table-primary-text, #ffffff)',
+                        boxShadow: '0 1px 2px 0 rgb(0 0 0 / 0.05)',
+                        border: 'none',
+                      }
+                    : {
+                        backgroundColor: 'var(--table-bg, #ffffff)',
+                        color: 'var(--table-text-secondary, #334155)',
+                        border: '1px solid var(--table-border, #e2e8f0)',
+                      }
+                }
                 aria-label={`Page ${pageNum + 1}`}
                 aria-current={pageIndex === pageNum ? "page" : undefined}
               >
@@ -71,34 +90,42 @@ export default function TablePagination({ table, rowsPerPageOptions = [5, 10, 25
           )}
         </div>
 
-        <button
+        <PaginationIconBtn
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
-          className="p-2 rounded-sm border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white transition-all"
           aria-label="Next page"
         >
-          <ChevronRight className="w-4 h-4 text-slate-600" />
-        </button>
+          <ChevronRight className="w-4 h-4" style={{ color: 'var(--table-text-secondary, #475569)' }} />
+        </PaginationIconBtn>
 
-        <button
+        <PaginationIconBtn
           onClick={() => table.setPageIndex(pageCount - 1)}
           disabled={!table.getCanNextPage()}
-          className="p-2 rounded-sm border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-white transition-all"
           aria-label="Last page"
         >
-          <ChevronsRight className="w-4 h-4 text-slate-600" />
-        </button>
+          <ChevronsRight className="w-4 h-4" style={{ color: 'var(--table-text-secondary, #475569)' }} />
+        </PaginationIconBtn>
       </div>
 
+      {/* Rows per page */}
       <div className="flex items-center gap-3 min-w-[140px] justify-end">
-        <label htmlFor="rows-per-page" className="text-sm font-medium text-slate-600 whitespace-nowrap">
+        <label
+          htmlFor="rows-per-page"
+          className="text-sm font-medium whitespace-nowrap"
+          style={{ color: 'var(--table-text-muted, #64748b)' }}
+        >
           Rows per page
         </label>
         <select
           id="rows-per-page"
           value={pageSize}
           onChange={(e) => table.setPageSize(Number(e.target.value))}
-          className="px-2 py-2 border border-slate-200 rounded-sm bg-white text-slate-700 text-sm font-medium hover:border-slate-300 focus:outline-none focus:border-primary-500/50 cursor-pointer"
+          className="px-2 py-2 rounded-sm text-sm font-medium cursor-pointer focus:outline-none"
+          style={{
+            border: '1px solid var(--table-input-border, #e2e8f0)',
+            backgroundColor: 'var(--table-bg, #ffffff)',
+            color: 'var(--table-text-secondary, #334155)',
+          }}
         >
           {rowsPerPageOptions.map((size) => (
             <option key={size} value={size}>
@@ -108,5 +135,29 @@ export default function TablePagination({ table, rowsPerPageOptions = [5, 10, 25
         </select>
       </div>
     </div>
+  );
+}
+
+// Small reusable icon button for pagination nav
+function PaginationIconBtn({ onClick, disabled, children, ...props }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      className="p-2 rounded-sm transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+      style={{
+        border: '1px solid var(--table-border, #e2e8f0)',
+        backgroundColor: 'var(--table-bg, #ffffff)',
+      }}
+      onMouseEnter={(e) => {
+        if (!disabled) e.currentTarget.style.backgroundColor = 'var(--table-btn-hover-bg, #f8fafc)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.backgroundColor = 'var(--table-bg, #ffffff)';
+      }}
+      {...props}
+    >
+      {children}
+    </button>
   );
 }
