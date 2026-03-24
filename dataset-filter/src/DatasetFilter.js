@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { FilterPanel } from "./FilterPanel";
 import { SearchHeader } from "./FilterItem";
-import { LoaderIcon } from "./icons";
+import { LoaderIcon } from "./Icon";
 import {
   applyFilters,
   updateSchemaWithDynamicOptions,

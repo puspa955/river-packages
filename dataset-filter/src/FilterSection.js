@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDownIcon } from "./icons";
+import { ChevronDownIcon } from "./Icon";
 
 export const FilterSection = ({ label, isNested = false, children, defaultExpanded = true }) => {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);

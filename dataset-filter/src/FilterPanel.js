@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SlidersIcon, ChevronDownIcon } from "./icons";
+import { SlidersIcon, ChevronDownIcon } from "./Icon";
 import { CheckboxFilter, CheckboxGroupFilter, NestedGroupFilter, RangeFilter } from "./FilterItem";
 
 export const FilterPanel = ({ schema, filters, onFilterChange }) => {

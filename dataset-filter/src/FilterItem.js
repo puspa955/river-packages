@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { SearchIcon, XIcon } from "./icons";
+import { SearchIcon, XIcon } from "./Icon";
 import { FilterSection } from "./FilterSection";
 
 /* ─────────────────────────────────────────
