@@ -186,19 +186,19 @@ const FilterItem = ({
 
           {(filterType === "string" || filterType === "number") && (
             <Input
-              defaultValue={value}
-              placeholder="Enter a value"
-              onBlur={(e) =>
-                handleSelectChange("value", adjustValueType(e?.target?.value, filterType))
-              }
-              type={inputType}
-              className="pl-2 bg-transparent text-sm rounded-none border-t-0 border-r-0 border-b-[1px] border-l-0 h-9 w-full"
-              style={{
-                borderColor: "var(--filter-input-border, #d1d5db)",
-                color: "var(--filter-text, #1e293b)",
-                outline: "none",
-              }}
-            />
+  defaultValue={value}
+  placeholder="Enter a value"
+  onBlur={(e) =>
+    handleSelectChange("value", adjustValueType(e?.target?.value, filterType))
+  }
+  type={inputType}
+  className="pl-2 bg-transparent text-sm rounded-none border h-9 w-full focus-visible:ring-0 focus-visible:outline-none"
+  style={{
+    borderColor: "var(--filter-input-border, #d1d5db)",
+    color: "var(--filter-text, #1e293b)",
+    outline: "none",
+  }}
+/>
           )}
         </div>
       </div>
