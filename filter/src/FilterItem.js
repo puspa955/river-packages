@@ -1,8 +1,5 @@
 import React, { useMemo } from "react";
-import {
-  Tooltip, Switch, Select, SelectTrigger, SelectValue,
-  SelectContent, SelectItem, FAIcon, Input, renderSelectTrigger
-} from "@ankamala/core";
+import { Tooltip, Switch, FAIcon, Input, renderSelectTrigger } from "@ankamala/core";
 import { adjustValueType } from "./utils/filterUtils";
 import { DatePicker } from "./DatePicker";
 import RichSelect from "./RichSelect";
