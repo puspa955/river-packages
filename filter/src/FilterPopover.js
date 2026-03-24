@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, FAIcon, Popover, PopoverTrigger, PopoverContent, TooltipProvider } from "@ankamala/ui-libraries/core";
+import { Button, FAIcon, Popover, PopoverTrigger, PopoverContent, TooltipProvider } from "@ankamala/core";
 import Filters from "./Filters";
 import { countConditions } from "./utils/filterUtils";
 

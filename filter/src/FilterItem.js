@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import {
   Tooltip, Switch, Select, SelectTrigger, SelectValue,
   SelectContent, SelectItem, FAIcon, Input, renderSelectTrigger
-} from "@ankamala/ui-libraries/core";
+} from "@ankamala/core";
 import { adjustValueType } from "./utils/filterUtils";
 import { DatePicker } from "./DatePicker";
 import RichSelect from "./RichSelect";

@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { format } from "date-fns";
-import { Calendar, Popover, PopoverContent, PopoverTrigger, Button } from "@ankamala/ui-libraries/core";
-import { cn } from "@ankamala/ui-libraries/core";
+import { Calendar, Popover, PopoverContent, PopoverTrigger, Button } from "@ankamala/core";
+import { cn } from "@ankamala/core";
 
 export function DatePicker({
   placeholder = "Enter a date",

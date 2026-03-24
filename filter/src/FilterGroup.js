@@ -1,8 +1,8 @@
 import React from "react";
 import FilterItem from "./FilterItem";
-import { FAIcon, Tooltip } from "@ankamala/ui-libraries/core";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@ankamala/ui-libraries/core";
-import { cn } from "@ankamala/ui-libraries/core";
+import { FAIcon, Tooltip } from "@ankamala/core";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@ankamala/core";
+import { cn } from "@ankamala/core";
 
 const MAX_NESTING_LEVEL = 2;
 const generateId = () => crypto?.randomUUID();
