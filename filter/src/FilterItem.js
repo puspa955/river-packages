@@ -104,6 +104,11 @@ const FilterItem = ({
         color: "var(--filter-text-muted, #6b7280)",
       }}
     >
+       <FAIcon
+                icon="sort"
+                className="h-3 w-3"
+                style={{ color: "var(--filter-text-muted, #6b7280)" }}
+              />
       <span className="truncate">{operator || "Select"}</span>
     </button>
   </RichSelect>
