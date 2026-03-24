@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import {
   Tooltip, Switch, Select, SelectTrigger, SelectValue,
   SelectContent, SelectItem, FAIcon, Input, renderSelectTrigger
-} from "@ankamala/core";
+} from "@ankamala/ui-libraries/core";
 import { adjustValueType } from "./utils/filterUtils";
 import { DatePicker } from "./DatePicker";
 import RichSelect from "./RichSelect";
@@ -172,11 +172,11 @@ const FilterItem = ({
                 className="mr-2"
                 style={{ color: "var(--filter-text-muted, #6b7280)" }}
               >
-                <Switch
+               <Switch
   onCheckedChange={(e) => handleSelectChange("value", !!e)}
   checked={!!value}
   className="w-9 h-4.5 rounded-full border-transparent transition-colors data-[state=checked]:bg-[var(--filter-primary,#4f46e5)] data-[state=unchecked]:bg-gray-500"
-  thumbStyle="w-4 h-4 bg-white rounded-full shadow-md transform transition-transform data-[state=checked]:translate-x-5 data-[state=unchecked]:translate-x-0"
+  thumbStyle="w-4 h-4 bg-white rounded-full shadow-md transform transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0"
 />
               </Tooltip>
             </div>

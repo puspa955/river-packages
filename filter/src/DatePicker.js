@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { format } from "date-fns";
-import { Calendar, Popover, PopoverContent, PopoverTrigger, Button } from "@ankamala/core";
-import { cn } from "@ankamala/core";
+import { Calendar, Popover, PopoverContent, PopoverTrigger, Button } from "@ankamala/ui-libraries/core";
+import { cn } from "@ankamala/ui-libraries/core";
 
 export function DatePicker({
   placeholder = "Enter a date",
@@ -21,7 +21,7 @@ export function DatePicker({
         <Button
   variant={"outline"}
   className={cn(
-    "text-xs border-0 border-b-[1px] shadow-none p-1 justify-start text-left font-normal",
+    "text-xs border-0 border-b-[1px] shadow-none p-1 justify-start text-left font-normal rounded-none",
     !value && "text-slate-500",
     className
   )}

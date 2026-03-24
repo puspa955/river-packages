@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import FilterGroup, { createCondition, createGroup } from "./FilterGroup";
-import { FAIcon, Button } from "@ankamala/core";
+import { FAIcon, Button } from "@ankamala/ui-libraries/core";
 
 const AddButtons = ({ onAddCondition, onAddGroup }) => (
   <div className="flex gap-6">
     <span
       className="font-medium cursor-pointer text-sm transition-colors"
       style={{ color: "var(--filter-text-muted, #6b7280)" }}
-      onMouseEnter={e => e.currentTarget.style.color = "var(--filter-primary, #4f46e5)"}
+      onMouseEnter={e => e.currentTarget.style.color = "var(--filter-add-hover, #4f46e5)"}
       onMouseLeave={e => e.currentTarget.style.color = "var(--filter-text-muted, #6b7280)"}
       onClick={onAddCondition}
     >
@@ -16,7 +16,7 @@ const AddButtons = ({ onAddCondition, onAddGroup }) => (
     <span
       className="font-medium cursor-pointer text-sm transition-colors"
       style={{ color: "var(--filter-text-muted, #6b7280)" }}
-      onMouseEnter={e => e.currentTarget.style.color = "var(--filter-primary, #4f46e5)"}
+      onMouseEnter={e => e.currentTarget.style.color = "var(--filter-add-hover, #4f46e5)"}
       onMouseLeave={e => e.currentTarget.style.color = "var(--filter-text-muted, #6b7280)"}
       onClick={onAddGroup}
     >

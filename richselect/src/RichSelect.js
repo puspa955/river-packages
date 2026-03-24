@@ -43,7 +43,7 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
                             <span className="truncate max-w-[120px]">
                                 {typeof option === "object" ? option.label : option}
                             </span>
-                            <FAIcon icon="close" className="h-2 w-2 ml-1 flex-shrink-0"
+                            <FAIcon icon="times" className="h-2 w-2 ml-1 flex-shrink-0"
                                 style={{ color: 'var(--rs-accent, #6366f1)' }} />
                         </span>
                     ))}

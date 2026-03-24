@@ -1,5 +1,5 @@
 import FiltersInner from "./Filter";
-import { cn } from "@ankamala/core";
+import { cn } from "@ankamala/ui-libraries/core";
 
 
 export default function Filters({ className, closePopover, options, filterData, defaultCondition, filters, updateFilters, keysMeta }) {

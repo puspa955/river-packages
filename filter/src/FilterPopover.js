@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, FAIcon, Popover, PopoverTrigger, PopoverContent, TooltipProvider } from "@ankamala/core";
+import { Button, FAIcon, Popover, PopoverTrigger, PopoverContent, TooltipProvider } from "@ankamala/ui-libraries/core";
 import Filters from "./Filters";
 import { countConditions } from "./utils/filterUtils";
 
@@ -38,13 +38,19 @@ export default function FilterPopover({
     >
       <PopoverTrigger asChild>
         <Button
-          className="rounded-sm h-10 w-10 text-lg shadow-lg relative"
-          style={{
-            background: "var(--filter-primary, #4f46e5)",
-            color: "var(--filter-primary-text, #ffffff)",
-            borderRadius: "var(--filter-radius, 2px)",
-          }}
-        >
+  className="rounded-sm h-10 w-10 text-lg shadow-lg relative"
+  style={{
+    background: "var(--filter-primary, #4f46e5)",
+    color: "var(--filter-primary-text, #ffffff)",
+    borderRadius: "var(--filter-radius, 2px)",
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.background = "var(--filter-primary-hover, #4338ca)";
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.background = "var(--filter-primary, #4f46e5)";
+  }}
+>
           <FAIcon icon="filter" />
           {filterCount > 0 && (
             <span

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"; 
-import { Popover, PopoverTrigger, PopoverContent } from "@ankamala/core";
+import { Popover, PopoverTrigger, PopoverContent } from "@ankamala/ui-libraries/core";
 import {
   CommandLibrary,
   CommandList,
@@ -9,10 +9,10 @@ import {
   CommandGroup,
   CommandInput,
   CommandEmpty,
-} from "@ankamala/core";
-import { cn, Spinner } from "@ankamala/core";
-import { FAIcon } from "@ankamala/core";
-import { Tooltip, TooltipProvider } from "@ankamala/core";
+} from "@ankamala/ui-libraries/core";
+import { cn, Spinner } from "@ankamala/ui-libraries/core";
+import { FAIcon } from "@ankamala/ui-libraries/core";
+import { Tooltip, TooltipProvider } from "@ankamala/ui-libraries/core";
 
 const getOptionValue = (option) => (typeof option === "object" ? option.path : option);
 
@@ -43,7 +43,7 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
                             <span className="truncate max-w-[120px]">
                                 {typeof option === "object" ? option.label : option}
                             </span>
-                            <FAIcon icon="close" className="h-2 w-2 ml-1 flex-shrink-0"
+                            <FAIcon icon="times" className="h-2 w-2 ml-1 flex-shrink-0"
                                 style={{ color: 'var(--rs-accent, #6366f1)' }} />
                         </span>
                     ))}

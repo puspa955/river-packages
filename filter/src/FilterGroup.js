@@ -1,8 +1,8 @@
 import React from "react";
 import FilterItem from "./FilterItem";
-import { FAIcon, Tooltip } from "@ankamala/core";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@ankamala/core";
-import { cn } from "@ankamala/core";
+import { FAIcon, Tooltip } from "@ankamala/ui-libraries/core";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@ankamala/ui-libraries/core";
+import { cn } from "@ankamala/ui-libraries/core";
 
 const MAX_NESTING_LEVEL = 2;
 const generateId = () => crypto?.randomUUID();
@@ -23,7 +23,7 @@ const createGroup = (children = [], operator = "and") => ({
 
 export { createCondition, createGroup };
 
-const hoverIn  = e => e.currentTarget.style.color = "var(--filter-primary, #4f46e5)";
+const hoverIn  = e => e.currentTarget.style.color = "var(--filter-add-hover, #4f46e5)";
 const hoverOut = e => e.currentTarget.style.color = "var(--filter-text-muted, #6b7280)";
 
 const AddButtons = ({ onAddCondition, onAddGroup, canAddGroup = true, level = 0 }) => {
