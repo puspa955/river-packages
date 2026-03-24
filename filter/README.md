@@ -297,6 +297,8 @@ FilterPopover uses CSS custom properties for theming. Add any of these to your `
   --filter-primary:          #4f46e5;  /* main brand color — button, icons, border accent */
   --filter-primary-hover:    #4338ca;  /* button hover state */
   --filter-primary-text:     #ffffff;  /* text on primary colored backgrounds */
+  --filter-add-hover:        #4338ca;
+
 
   --filter-bg:               #f9fafb;  /* popover background */
   --filter-bg-group:         #f3f4f6;  /* condition group background */
