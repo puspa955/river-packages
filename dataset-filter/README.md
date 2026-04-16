@@ -1,13 +1,27 @@
-# Dataset Filter
+# DatasetFilter
 
 A flexible, theme-aware dataset filter component for React. Renders a sticky sidebar filter panel with search, checkboxes, range buckets, and nested groups. Supports static arrays, remote URLs, and custom fetch functions.
 
 ---
 
 ## Installation
+
 ```bash
 npm install git+https://github.com/puspa955/river-packages.git#main
 ```
+
+See the [root README](../README.md) for required project setup — `next.config.js`, `tailwind.config.js`, and Font Awesome CSS must all be configured before this component will work correctly.
+
+---
+
+## Peer Dependencies
+
+| Package | Version |
+|---|---|
+| `react` | `>=18` |
+| `react-dom` | `>=18` |
+| `@tanstack/react-query` | `>=5` |
+| `tailwindcss` | `>=3` |
 
 ---
 
@@ -191,19 +205,19 @@ jobDetails: {
 
 ## Props
 
-| Prop            | Type       | Default  | Description                                                        |
-|-----------------|------------|----------|--------------------------------------------------------------------|
-| `schema`        | `object`   | required | Filter schema definition                                           |
-| `data`          | `array`    | `null`   | Static data array                                                  |
-| `dataset`       | `string`   | `null`   | Remote JSON URL to fetch                                           |
-| `queryFn`       | `function` | `null`   | Custom async fetch function                                        |
-| `queryKey`      | `array`    | auto     | React Query cache key (required when using `queryFn`)              |
-| `dataTransform` | `function` | `null`   | Transform fetched data before filtering. Receives raw fetch result |
-| `renderContent` | `function` | —        | Render prop — receives `{ filteredData, totalData, filters }`      |
-| `enableUrlSync` | `boolean`  | `true`   | Sync active filters to `?f=` URL param                             |
-| `queryOptions`  | `object`   | `{}`     | Extra options passed directly to React Query's `useQuery`          |
-| `className`     | `string`   | `""`     | Class name on the root wrapper                                     |
-| `style`         | `object`   | `{}`     | Inline style on the root wrapper                                   |
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `schema` | `object` | required | Filter schema definition |
+| `data` | `array` | `null` | Static data array |
+| `dataset` | `string` | `null` | Remote JSON URL to fetch |
+| `queryFn` | `function` | `null` | Custom async fetch function |
+| `queryKey` | `array` | auto | React Query cache key (required when using `queryFn`) |
+| `dataTransform` | `function` | `null` | Transform fetched data before filtering. Receives raw fetch result |
+| `renderContent` | `function` | — | Render prop — receives `{ filteredData, totalData, filters }` |
+| `enableUrlSync` | `boolean` | `true` | Sync active filters to `?f=` URL param |
+| `queryOptions` | `object` | `{}` | Extra options passed directly to React Query's `useQuery` |
+| `className` | `string` | `""` | Class name on the root wrapper |
+| `style` | `object` | `{}` | Inline style on the root wrapper |
 
 ---
 
@@ -227,10 +241,10 @@ renderContent={({ filteredData, totalData, filters }) => (
 import { DatasetFilter } from '@ankamala/ui-libraries/dataset-filter';
 
 const SAMPLE_JOBS = [
-  { id: 1,  title: 'Frontend Engineer', company: 'Stripe',     location: 'Remote',        salary: 130000, type: 'Full-time', remote: true,  tags: ['React', 'TypeScript'] },
-  { id: 2,  title: 'Backend Engineer',  company: 'Vercel',     location: 'San Francisco', salary: 145000, type: 'Full-time', remote: false, tags: ['Node.js', 'Go'] },
-  { id: 3,  title: 'Product Designer',  company: 'Linear',     location: 'Remote',        salary: 115000, type: 'Full-time', remote: true,  tags: ['Figma', 'UX'] },
-  { id: 4,  title: 'ML Engineer',       company: 'Anthropic',  location: 'San Francisco', salary: 180000, type: 'Full-time', remote: false, tags: ['Python', 'PyTorch'] },
+  { id: 1, title: 'Frontend Engineer', company: 'Stripe',    location: 'Remote',        salary: 130000, type: 'Full-time', remote: true,  tags: ['React', 'TypeScript'] },
+  { id: 2, title: 'Backend Engineer',  company: 'Vercel',    location: 'San Francisco', salary: 145000, type: 'Full-time', remote: false, tags: ['Node.js', 'Go'] },
+  { id: 3, title: 'Product Designer',  company: 'Linear',    location: 'Remote',        salary: 115000, type: 'Full-time', remote: true,  tags: ['Figma', 'UX'] },
+  { id: 4, title: 'ML Engineer',       company: 'Anthropic', location: 'San Francisco', salary: 180000, type: 'Full-time', remote: false, tags: ['Python', 'PyTorch'] },
 ];
 
 const JOB_SCHEMA = {
@@ -259,7 +273,6 @@ const JOB_SCHEMA = {
         type: 'checkbox-group',
         label: 'Location',
         field: 'location',
-        // omit options — auto-extracted from data
       },
     },
   },
@@ -279,7 +292,6 @@ const JOB_SCHEMA = {
     label: 'Tech Stack',
     field: 'tags',
     isArray: true,
-    // omit options — auto-extracted from data
   },
 };
 
@@ -359,43 +371,3 @@ Scope overrides to a single page:
   --dsf-badge-border:  #fecdd3;
 }
 ```
-
----
-
-## Next.js Setup
-
-Add this to `next.config.js` to prevent duplicate React errors when linking the package locally:
-
-```js
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const nextConfig = {
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'react':                 resolve(__dirname, 'node_modules/react'),
-      'react-dom':             resolve(__dirname, 'node_modules/react-dom'),
-      'react/jsx-runtime':     resolve(__dirname, 'node_modules/react/jsx-runtime'),
-      '@tanstack/react-query': resolve(__dirname, 'node_modules/@tanstack/react-query'),
-    };
-    return config;
-  },
-  transpilePackages: ['@ankamala/ui-libraries'],
-};
-
-export default nextConfig;
-```
-
----
-
-## Peer Dependencies
-
-| Package                 | Version |
-|-------------------------|---------|
-| `react`                 | `>=18`  |
-| `react-dom`             | `>=18`  |
-| `@tanstack/react-query` | `>=5`   |

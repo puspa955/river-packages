@@ -1,17 +1,35 @@
-# Filter
+# FilterPopover
 
 A flexible, theme-aware filter popover component for React. Supports text, number, select, boolean, and date filter types with nested condition groups and AND/OR logic.
 
 ---
 
 ## Installation
+
 ```bash
 npm install git+https://github.com/puspa955/river-packages.git#main
 ```
 
+See the [root README](../README.md) for required project setup — `next.config.js`, `tailwind.config.js`, and Font Awesome CSS must all be configured before this component will work correctly.
+
+---
+
+## Peer Dependencies
+
+| Package | Version |
+|---|---|
+| `react` | `>=18` |
+| `react-dom` | `>=18` |
+| `tailwindcss` | `>=3` |
+| `dayjs` | `>=1` |
+| `@fortawesome/fontawesome-svg-core` | `>=6` |
+| `@fortawesome/free-solid-svg-icons` | `>=6` |
+| `@fortawesome/react-fontawesome` | `>=0.2` |
+
 ---
 
 ## Usage
+
 ```jsx
 import { FilterPopover } from '@ankamala/ui-libraries/filter';
 import { useState } from 'react';
@@ -36,7 +54,9 @@ export default function Example() {
 ## Data Contracts
 
 ### `filterData`
+
 Defines the available fields and their types. This is **not** your raw data array — it is the schema.
+
 ```js
 const FILTER_DATA = {
   fields: [
@@ -56,25 +76,27 @@ const FILTER_DATA = {
 };
 ```
 
-| Field    | Type     | Required | Description                                      |
-|----------|----------|----------|--------------------------------------------------|
-| `fields` | `array`  | yes      | List of `{ path, label }` objects for the dropdown |
-| `types`  | `object` | yes      | Maps each field path to its type                 |
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `fields` | `array` | yes | List of `{ path, label }` objects for the dropdown |
+| `types` | `object` | yes | Maps each field path to its type |
 
 **Supported types:**
 
-| Type      | Operators                          | Input        |
-|-----------|------------------------------------|--------------|
-| `string`  | `=`, `!=`, `contains`, `beginswith`| Text input   |
-| `number`  | `=`, `!=`, `<`, `>`, `<=`, `>=`   | Number input |
-| `select`  | `=`, `!=`                          | Dropdown     |
-| `boolean` | `=`, `!=`                          | Toggle       |
-| `date`    | `=`, `!=`, `<`, `>`, `<=`, `>=`   | Date picker  |
+| Type | Operators | Input |
+|---|---|---|
+| `string` | `=`, `!=`, `contains`, `beginswith` | Text input |
+| `number` | `=`, `!=`, `<`, `>`, `<=`, `>=` | Number input |
+| `select` | `=`, `!=` | Dropdown |
+| `boolean` | `=`, `!=` | Toggle |
+| `date` | `=`, `!=`, `<`, `>`, `<=`, `>=` | Date picker |
 
 ---
 
 ### `keysMeta`
+
 Drives which input renders per field. Must have an entry for every field in `filterData.fields`.
+
 ```js
 const KEYS_META = {
   name:      { label: 'Name',       type: 'string'  },
@@ -86,16 +108,18 @@ const KEYS_META = {
 };
 ```
 
-| Field      | Type      | Required | Description                              |
-|------------|-----------|----------|------------------------------------------|
-| `label`    | `string`  | yes      | Display label for the field              |
-| `type`     | `string`  | yes      | Must match the type in `filterData.types`|
-| `multiple` | `boolean` | no       | Enable multi-select for `select` type    |
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `label` | `string` | yes | Display label for the field |
+| `type` | `string` | yes | Must match the type in `filterData.types` |
+| `multiple` | `boolean` | no | Enable multi-select for `select` type |
 
 ---
 
 ### `options`
+
 Select options for `select` type fields. Each value must be a `{ path, label }` object.
+
 ```js
 const OPTIONS = {
   status: [
@@ -111,12 +135,14 @@ const OPTIONS = {
 };
 ```
 
-> **Important:** `options` is only needed for fields with `type: 'select'`. Other types do not need entries here.
+> **Note:** `options` is only needed for fields with `type: 'select'`. Other types do not need entries here.
 
 ---
 
 ### `filters`
+
 Controlled state value. Starts as `null` and becomes the backend filter format after the user clicks Apply.
+
 ```js
 const [filters, setFilters] = useState(null);
 ```
@@ -124,9 +150,11 @@ const [filters, setFilters] = useState(null);
 ---
 
 ### `updateFilters`
+
 Called with the cleaned backend format when the user clicks Apply.
 
 **Output shape:**
+
 ```js
 {
   operator: 'and',
@@ -138,6 +166,7 @@ Called with the cleaned backend format when the user clicks Apply.
 ```
 
 For nested condition groups:
+
 ```js
 {
   operator: 'and',
@@ -159,6 +188,7 @@ For nested condition groups:
 ## Applying Filters to Data
 
 Use the exported `applyFilterFn` to filter your data with the output from `updateFilters`:
+
 ```js
 import { FilterPopover, applyFilterFn } from '@ankamala/ui-libraries/filter';
 import { useState, useMemo } from 'react';
@@ -174,6 +204,7 @@ const filteredData = useMemo(() => {
 ---
 
 ## Full Example
+
 ```jsx
 import { FilterPopover, applyFilterFn } from '@ankamala/ui-libraries/filter';
 import { useState, useMemo } from 'react';
@@ -257,21 +288,22 @@ export default function Example() {
 
 ## Props
 
-| Prop               | Type       | Default | Description                                                    |
-|--------------------|------------|---------|----------------------------------------------------------------|
-| `filterData`       | `object`   | required| Schema with `fields` and `types` — NOT your raw data array     |
-| `keysMeta`         | `object`   | required| Maps each field path to `{ label, type, multiple? }`           |
-| `options`          | `object`   | `{}`    | Select options map `{ [path]: [{ path, label }] }`             |
-| `filters`          | `object`   | `null`  | Controlled filter state                                        |
-| `updateFilters`    | `function` | required| Called with backend filter format on Apply                     |
-| `defaultCondition` | `object`   | —       | Pre-populates first condition `{ key, operator, value }`       |
-| `filterProps`      | `object`   | —       | Alternative: pass all props as a single object (new API)       |
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `filterData` | `object` | required | Schema with `fields` and `types` — NOT your raw data array |
+| `keysMeta` | `object` | required | Maps each field path to `{ label, type, multiple? }` |
+| `options` | `object` | `{}` | Select options map `{ [path]: [{ path, label }] }` |
+| `filters` | `object` | `null` | Controlled filter state |
+| `updateFilters` | `function` | required | Called with backend filter format on Apply |
+| `defaultCondition` | `object` | — | Pre-populates first condition `{ key, operator, value }` |
+| `filterProps` | `object` | — | Alternative: pass all props as a single object (new API) |
 
 ---
 
 ## `filterProps` API (alternative)
 
 Instead of passing props individually you can bundle them into a single `filterProps` object:
+
 ```jsx
 const filterProps = {
   filterData: FILTER_DATA,
@@ -289,16 +321,22 @@ const filterProps = {
 
 ---
 
+## Nesting
+
+Conditions can be nested up to **3 levels deep** using condition groups. Each group has its own AND/OR logic selector.
+
+---
+
 ## Theming
 
 FilterPopover uses CSS custom properties for theming. Add any of these to your `globals.css`. All variables have fallback defaults so you only need to override what you want to change.
+
 ```css
 :root {
   --filter-primary:          #4f46e5;  /* main brand color — button, icons, border accent */
   --filter-primary-hover:    #4338ca;  /* button hover state */
   --filter-primary-text:     #ffffff;  /* text on primary colored backgrounds */
   --filter-add-hover:        #4338ca;
-
 
   --filter-bg:               #f9fafb;  /* popover background */
   --filter-bg-group:         #f3f4f6;  /* condition group background */
@@ -318,18 +356,3 @@ FilterPopover uses CSS custom properties for theming. Add any of these to your `
   --filter-radius:           2px;      /* border radius */
 }
 ```
-
----
-
-## Nesting
-
-Conditions can be nested up to **3 levels deep** using condition groups. Each group has its own AND/OR logic selector.
-
----
-
-## Peer Dependencies
-
-| Package     | Version  |
-|-------------|----------|
-| `react`     | `>=18`   |
-| `react-dom` | `>=18`   |
