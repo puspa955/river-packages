@@ -17,9 +17,10 @@ import LoginForm from "./LoginForm";
  *
  * @param {object}   props
  * @param {AuthStep} [props.initialStep='login']     - Which view to show first
- * @param {function} props.onLogin                   - async ({ email, password }) => void
+ * @param {function} props.onLogin                   - async ({ email, password }) => { user, token }
  * @param {function} props.onSignup                  - async ({ name, email, password }) => void
  * @param {function} props.onResetPassword           - async ({ email }) => void
+ * @param {function} [props.onLoginSuccess]          - (result) => void — called after login resolves; use to redirect
  * @param {boolean}  [props.loading=false]           - Global loading state (disables all forms)
  * @param {string}   [props.loginError]
  * @param {string}   [props.signupError]
@@ -32,6 +33,7 @@ function AuthFlow({
   onLogin,
   onSignup,
   onResetPassword,
+  onLoginSuccess,
   loading = false,
   loginError,
   signupError,
@@ -40,13 +42,35 @@ function AuthFlow({
   className,
 }) {
   const [step, setStep] = useState(initialStep);
+  const [postSignupMessage, setPostSignupMessage] = useState(null);
+  const [loginSuccessMessage, setLoginSuccessMessage] = useState(null);
 
   const goTo = (next) => () => setStep(next);
+
+  const handleSignup = async (data) => {
+    if (typeof onSignup === "function") {
+      await onSignup(data);
+    }
+    setPostSignupMessage("Account created successfully! Please sign in.");
+    setStep("login");
+  };
+
+  const handleLogin = async (data) => {
+    if (typeof onLogin === "function") {
+      const result = await onLogin(data);
+      setLoginSuccessMessage("Logged in successfully! Redirecting...");
+      setTimeout(() => {
+        if (typeof onLoginSuccess === "function") {
+          onLoginSuccess(result);
+        }
+      }, 1500);
+    }
+  };
 
   if (step === "signup") {
     return (
       <SignupForm
-        onSubmit={onSignup}
+        onSubmit={handleSignup}
         loading={loading}
         error={signupError}
         onLoginClick={goTo("login")}
@@ -68,12 +92,12 @@ function AuthFlow({
     );
   }
 
-  // default: login
   return (
     <LoginForm
-      onSubmit={onLogin}
+      onSubmit={handleLogin}
       loading={loading}
       error={loginError}
+      successMessage={loginSuccessMessage || postSignupMessage}
       onForgotPassword={goTo("reset")}
       onSignupClick={goTo("signup")}
       className={className}
