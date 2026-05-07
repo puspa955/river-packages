@@ -13,7 +13,6 @@ export {
   FormField,
   Input,
   Label,
-  cn,
 } from "./components/ui";
 export { default as PasswordInput } from "./components/ui/PasswordInput";
 

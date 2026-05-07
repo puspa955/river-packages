@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { cn } from "./ui";
+import { cn } from "@ankamala/core";
 
 /**
  * OTPInput

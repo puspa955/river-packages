@@ -2,10 +2,10 @@ import React from "react";
 import * as LabelPrimitive from "@radix-ui/react-label";
 import { Slot } from "@radix-ui/react-slot";
 import { clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
-// ─── cn utility (mirrors core if not importing from @ankamala/core) ───────────
 export function cn(...inputs) {
-  return inputs.filter(Boolean).join(" ");
+  return twMerge(clsx(inputs));
 }
 
 // ─── Label ────────────────────────────────────────────────────────────────────
