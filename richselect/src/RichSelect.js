@@ -32,10 +32,12 @@ const SelectedOptionsDisplay = ({ selected, onRemove, onClearAll }) => {
                         <span
                             key={getOptionValue(option)}
                             onClick={(e) => { e.stopPropagation(); onRemove(option); }}
-                            className="flex items-center text-[10px] px-1 py-0.5 rounded-sm cursor-pointer transition flex-shrink-0"
+                            className="flex items-center px-1 py-0.5 cursor-pointer transition flex-shrink-0"
                             style={{
                                 backgroundColor: 'var(--rs-tag-bg, #eef2ff)',
                                 color: 'var(--rs-tag-text, #6366f1)',
+                                borderRadius: 'var(--rs-radius, 4px)',
+                                fontSize: 'var(--rs-font-size-tag, 10px)',
                             }}
                             onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--rs-accent-hover, #e0e7ff)'}
                             onMouseLeave={e => e.currentTarget.style.backgroundColor = 'var(--rs-tag-bg, #eef2ff)'}
@@ -102,8 +104,8 @@ const RecursiveOptions = ({ options, selected, onOptionSelect, className, multip
                             key={index}
                             heading={
                                 <span
-                                    className="cursor-default font-bold text-sm whitespace-nowrap"
-                                    style={{ color: 'var(--rs-text, #111827)' }}
+                                    className="cursor-default font-bold whitespace-nowrap"
+                                    style={{ color: 'var(--rs-text, #111827)', fontSize: 'var(--rs-font-size, 0.875rem)' }}
                                 >
                                     {option.label}
                                 </span>
@@ -260,6 +262,7 @@ const RichSelect = ({
                     style={{
                         backgroundColor: 'var(--rs-bg, #ffffff)',
                         borderColor: 'var(--rs-border, #f3f4f6)',
+                        borderRadius: 'var(--rs-radius, 6px)',
                     }}
                 >
                     <TooltipProvider>

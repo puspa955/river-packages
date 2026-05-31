@@ -205,18 +205,21 @@ RichSelect uses CSS custom properties for theming. Add any of these to your `glo
 
 ```css
 :root {
-  --rs-accent:       #6366f1;  /* primary color — selected state, checkmark, tags */
-  --rs-accent-bg:    #eef2ff;  /* light accent background — selected item bg, tag bg */
-  --rs-accent-hover: #e0e7ff;  /* accent hover — tag hover background */
-  --rs-border:       #f3f4f6;  /* border color — item dividers, popover border, input border */
-  --rs-text:         #111827;  /* primary text — option labels */
-  --rs-text-muted:   #6b7280;  /* secondary text — placeholder, empty state */
-  --rs-bg:           #ffffff;  /* popover background */
-  --rs-bg-hover:     #f9fafb;  /* item hover background */
-  --rs-selected-bg:  #eef2ff;  /* selected item background (defaults to --rs-accent-bg) */
-  --rs-check-color:  #6366f1;  /* checkmark icon color (defaults to --rs-accent) */
-  --rs-tag-bg:       #eef2ff;  /* selected tag background in multi-select summary */
-  --rs-tag-text:     #6366f1;  /* selected tag text in multi-select summary */
+  --rs-accent:        #6366f1;   /* primary color — selected state, checkmark, tags */
+  --rs-accent-bg:     #eef2ff;   /* light accent background — selected item bg, tag bg */
+  --rs-accent-hover:  #e0e7ff;   /* accent hover — tag hover background */
+  --rs-border:        #f3f4f6;   /* border color — item dividers, popover border, input border */
+  --rs-text:          #111827;   /* primary text — option labels */
+  --rs-text-muted:    #6b7280;   /* secondary text — placeholder, empty state */
+  --rs-bg:            #ffffff;   /* popover background */
+  --rs-bg-hover:      #f9fafb;   /* item hover background */
+  --rs-selected-bg:   #eef2ff;   /* selected item background (defaults to --rs-accent-bg) */
+  --rs-check-color:   #6366f1;   /* checkmark icon color (defaults to --rs-accent) */
+  --rs-tag-bg:        #eef2ff;   /* selected tag background in multi-select summary */
+  --rs-tag-text:      #6366f1;   /* selected tag text in multi-select summary */
+  --rs-radius:        6px;       /* border radius — popover and tags */
+  --rs-font-size:     0.875rem;  /* font size for group headings */
+  --rs-font-size-tag: 10px;      /* font size for multi-select tags */
 }
 ```
 
@@ -239,4 +242,6 @@ trigger={(selected) => (
 
 - `--rs-accent` is the most important variable — it controls the primary color throughout.
 - `--rs-selected-bg`, `--rs-check-color`, `--rs-tag-bg`, and `--rs-tag-text` follow `--rs-accent` and `--rs-accent-bg` automatically if not set separately.
-- Font family, font size, and spacing all inherit from your app automatically — no variables needed.
+- **Font family** inherits from your app automatically if set on `html` or `body`. If your app sets it on a scoped selector like `#root` (common in React), the dropdown portal won't inherit it — set it explicitly on `[data-radix-popper-content-wrapper]`.
+- **Font size** for list items inherits from your app. Group headings and tags use `--rs-font-size` and `--rs-font-size-tag` respectively.
+- `--rs-radius` controls both the popover border radius and the multi-select tag border radius.
