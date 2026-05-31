@@ -127,7 +127,7 @@ const RecursiveOptions = ({ options, selected, onOptionSelect, className, multip
                     <CommandItem
                         key={index}
                         value={option.label}
-                        className="px-4 py-2 cursor-pointer font-light border-b whitespace-nowrap transition-colors"
+                        className="px-4 py-2 cursor-pointer font-light border-b last:border-b-0 whitespace-nowrap transition-colors"
                         style={{
                             borderColor:     'var(--rs-border, #f3f4f6)',
                             backgroundColor: isSelected ? 'var(--rs-selected-bg, #eef2ff)' : undefined,
@@ -262,7 +262,6 @@ const RichSelect = ({
                     style={{
                         backgroundColor: 'var(--rs-bg, #ffffff)',
                         borderColor: 'var(--rs-border, #f3f4f6)',
-                        borderRadius: 'var(--rs-radius, 6px)',
                     }}
                 >
                     <TooltipProvider>

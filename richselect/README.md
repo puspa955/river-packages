@@ -217,7 +217,7 @@ RichSelect uses CSS custom properties for theming. Add any of these to your `glo
   --rs-check-color:   #6366f1;   /* checkmark icon color (defaults to --rs-accent) */
   --rs-tag-bg:        #eef2ff;   /* selected tag background in multi-select summary */
   --rs-tag-text:      #6366f1;   /* selected tag text in multi-select summary */
-  --rs-radius:        6px;       /* border radius — popover and tags */
+  --rs-radius:        6px;       /* border radius — tags only (see note below) */
   --rs-font-size:     0.875rem;  /* font size for group headings */
   --rs-font-size-tag: 10px;      /* font size for multi-select tags */
 }
@@ -244,4 +244,9 @@ trigger={(selected) => (
 - `--rs-selected-bg`, `--rs-check-color`, `--rs-tag-bg`, and `--rs-tag-text` follow `--rs-accent` and `--rs-accent-bg` automatically if not set separately.
 - **Font family** inherits from your app automatically if set on `html` or `body`. If your app sets it on a scoped selector like `#root` (common in React), the dropdown portal won't inherit it — set it explicitly on `[data-radix-popper-content-wrapper]`.
 - **Font size** for list items inherits from your app. Group headings and tags use `--rs-font-size` and `--rs-font-size-tag` respectively.
-- `--rs-radius` controls both the popover border radius and the multi-select tag border radius.
+- `--rs-radius` controls the multi-select tag border radius. For the **popover** border radius, set it directly in your app's CSS:
+  ```css
+  [data-radix-popper-content-wrapper] > div {
+    border-radius: 4px;
+  }
+  ```
