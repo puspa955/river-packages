@@ -172,18 +172,12 @@ const FilterItem = ({
           )}
 
           {filterType === "boolean" && (
-            <div className="flex justify-center items-center h-full px-8 text-center">
-              <Tooltip
-                tooltipText="Toggle to enable or disable"
-                className="mr-2"
-                style={{ color: "var(--filter-text-muted, #6b7280)" }}
-              >
-               <Switch
-  onCheckedChange={(e) => handleSelectChange("value", !!e)}
-  checked={!!value}
-  className="w-9 h-4.5 rounded-full border-transparent transition-colors data-[state=checked]:bg-[var(--filter-primary,#4f46e5)] data-[state=unchecked]:bg-gray-500"
-  thumbStyle="w-4 h-4 bg-white rounded-full shadow-md transform transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0"
-/>
+            <div className="flex items-center h-full">
+              <Tooltip tooltipText="Toggle to enable or disable">
+                <Switch
+                  onCheckedChange={(e) => handleSelectChange("value", !!e)}
+                  checked={!!value}
+                />
               </Tooltip>
             </div>
           )}
