@@ -3,9 +3,9 @@ import FilterGroup, { createCondition, createGroup } from "./FilterGroup";
 import { FAIcon, Button } from "@ankamala/core";
 
 const AddButtons = ({ onAddCondition, onAddGroup }) => (
-  <div className="flex gap-6">
+  <div className="flex flex-wrap gap-x-6 gap-y-1">
     <span
-      className="font-medium cursor-pointer text-sm transition-colors"
+      className="font-medium cursor-pointer text-sm transition-colors whitespace-nowrap"
       style={{ color: "var(--filter-text-muted, #6b7280)" }}
       onMouseEnter={e => e.currentTarget.style.color = "var(--filter-add-hover, #4f46e5)"}
       onMouseLeave={e => e.currentTarget.style.color = "var(--filter-text-muted, #6b7280)"}
@@ -14,7 +14,7 @@ const AddButtons = ({ onAddCondition, onAddGroup }) => (
       + Add condition
     </span>
     <span
-      className="font-medium cursor-pointer text-sm transition-colors"
+      className="font-medium cursor-pointer text-sm transition-colors whitespace-nowrap"
       style={{ color: "var(--filter-text-muted, #6b7280)" }}
       onMouseEnter={e => e.currentTarget.style.color = "var(--filter-add-hover, #4f46e5)"}
       onMouseLeave={e => e.currentTarget.style.color = "var(--filter-text-muted, #6b7280)"}
@@ -129,7 +129,7 @@ const Filter = ({
         <>
           {showFilterGroup && (
             <div className="flex gap-2 items-start mb-4">
-              <div className="flex-1">
+              <div className="min-w-0 flex-1">
                 <FilterGroup
                   group={rootGroup}
                   onChange={setRootGroup}
@@ -146,7 +146,7 @@ const Filter = ({
             </div>
           )}
 
-          <div className="flex justify-between items-center gap-10">
+          <div className="flex flex-wrap justify-between items-center gap-x-4 gap-y-3 sm:gap-10">
             <AddButtons
               onAddCondition={handleAddConditionToRoot}
               onAddGroup={handleAddGroupToRoot}

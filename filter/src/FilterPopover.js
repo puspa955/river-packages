@@ -68,7 +68,12 @@ export default function FilterPopover({
       </PopoverTrigger>
 
       <PopoverContent
-        className="max-w-[60vw] w-auto max-h-[70vh] overflow-y-auto rounded-none p-6"
+        collisionPadding={8}
+        // `max(32rem,60vw)` is the same 60vw desktop always used, just with a
+        // floor — at a tablet's in-between widths 60vw alone comes out
+        // narrower than the single-row content actually needs, so it doesn't
+        // shrink until a wide-enough screen would make 60vw bigger anyway.
+        className="w-[calc(100vw-1rem)] max-w-none max-h-[min(70vh,var(--radix-popover-content-available-height))] overflow-y-auto rounded-none p-4 sm:w-auto sm:max-w-[max(32rem,60vw)] sm:max-h-[70vh] sm:p-6"
         style={{
           background: "var(--filter-bg, #f9fafb)",
           borderTop: "2px solid var(--filter-border-top, #4f46e5)",

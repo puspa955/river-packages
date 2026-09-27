@@ -59,11 +59,15 @@ const FilterItem = ({
   };
 
   return (
+    // Field / operator / value stay on one row at every width — on a phone the
+    // key selector just gives up its fixed 200px for a narrower share (with
+    // its label already truncating), instead of each control stacking on its
+    // own line.
     <div className="flex gap-2 items-center w-full">
-      <div className="flex gap-4 items-center w-full">
+      <div className="flex flex-row gap-2 sm:gap-4 items-center w-full min-w-0">
 
         {/* Key */}
-        <div className="flex-shrink-0 w-[200px]">
+        <div className="w-2/5 min-w-0 shrink-0 sm:w-[200px]">
           <RichSelect
             selected={key}
             onSelect={(v) => handleSelectChange("key", v.path)}
@@ -87,7 +91,7 @@ const FilterItem = ({
         </div>
 
         {/* Operator */}
-<div className="flex-shrink-0 w-auto">
+<div className="w-auto shrink-0">
   <RichSelect
     selected={operator}
     onSelect={(v) => handleSelectChange("operator", v.path)}
@@ -112,7 +116,7 @@ const FilterItem = ({
 </div>
 
         {/* Value */}
-        <div className="flex-1">
+        <div className="flex-1 min-w-0">
           {filterType === "select" && (
             <RichSelect
               options={optionsArray}

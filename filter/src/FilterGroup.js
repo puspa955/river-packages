@@ -30,9 +30,11 @@ const AddButtons = ({ onAddCondition, onAddGroup, canAddGroup = true, level = 0 
   const isMaxLevel = level >= MAX_NESTING_LEVEL;
 
   return (
-    <div className="flex gap-4">
+    // Always one row, even on a phone — a tighter gap on small screens is
+    // what buys back the room, not wrapping the second link onto its own line.
+    <div className="flex flex-nowrap items-center gap-x-2 sm:gap-x-4">
       <span
-        className="font-medium cursor-pointer text-sm transition-colors"
+        className="font-medium cursor-pointer text-sm transition-colors whitespace-nowrap"
         style={{ color: "var(--filter-text-muted, #6b7280)" }}
         onMouseEnter={hoverIn}
         onMouseLeave={hoverOut}
@@ -44,7 +46,7 @@ const AddButtons = ({ onAddCondition, onAddGroup, canAddGroup = true, level = 0 
         isMaxLevel ? (
           <Tooltip tooltipText="Filter condition can only be nested three levels deep">
             <span
-              className="text-sm cursor-not-allowed"
+              className="text-sm cursor-not-allowed whitespace-nowrap"
               style={{ color: "var(--filter-text-placeholder, #9ca3af)" }}
             >
               + Add condition group
@@ -52,7 +54,7 @@ const AddButtons = ({ onAddCondition, onAddGroup, canAddGroup = true, level = 0 
           </Tooltip>
         ) : (
           <span
-            className="font-medium cursor-pointer text-sm transition-colors"
+            className="font-medium cursor-pointer text-sm transition-colors whitespace-nowrap"
             style={{ color: "var(--filter-text-muted, #6b7280)" }}
             onMouseEnter={hoverIn}
             onMouseLeave={hoverOut}
@@ -124,7 +126,7 @@ const FilterGroup = ({
 
   return (
     <div
-      className={cn("flex flex-col gap-4", showGroupStyling && "rounded-sm py-2 px-4")}
+      className={cn("flex flex-col gap-4", showGroupStyling && "rounded-sm py-2 px-3 sm:px-4")}
       style={showGroupStyling ? {
         border: "1px solid var(--filter-border, #e5e7eb)",
         background: "var(--filter-bg-group, #f3f4f6)",
@@ -141,25 +143,30 @@ const FilterGroup = ({
       )}
 
       {children.map((child, index) => (
-        <div key={child.id} className="flex gap-2 items-start">
+        <div key={child.id} className="flex flex-col gap-2 sm:flex-row sm:gap-4 items-start">
           {index === 0 ? (
             <span
-              className="w-[55px] pt-2 text-sm font-medium"
+              className="sm:w-[55px] sm:shrink-0 sm:pt-2 text-sm font-medium"
               style={{ color: "var(--filter-text, #1e293b)" }}
             >
               Where
             </span>
           ) : index === 1 ? (
-            <LogicSelector value={logic} onChange={updateLogic} />
+            // Same `sm:w-[55px]` column as "Where" / the and/or text below, so
+            // the condition/group box beside it lines up with the others
+            // instead of starting wherever the select's own content ends.
+            <div className="sm:w-[55px] sm:shrink-0">
+              <LogicSelector value={logic} onChange={updateLogic} />
+            </div>
           ) : (
             <span
-              className="w-[55px] pt-2 text-sm"
+              className="sm:w-[55px] sm:shrink-0 sm:pt-2 text-sm"
               style={{ color: "var(--filter-text-muted, #6b7280)" }}
             >
               {logic}
             </span>
           )}
-          <div className="flex-1">
+          <div className="w-full min-w-0 sm:flex-1">
             {child.isGroup ? (
               <FilterGroup
                 group={child}
@@ -192,18 +199,23 @@ const FilterGroup = ({
 
       {showGroupControls && (
         <div
-          className="flex justify-between gap-10 items-center pt-2"
+          className="flex items-center justify-between gap-2 sm:gap-4 pt-2"
           style={{ borderTop: "1px solid var(--filter-border, #e5e7eb)" }}
         >
-          <AddButtons
-            onAddCondition={handleAddCondition}
-            onAddGroup={handleAddGroup}
-            level={level}
-          />
+          {/* "+ Add condition", "+ Add condition group" and the remove button
+              all stay on the one row on a phone too — AddButtons' own gap
+              just tightens instead of anything here wrapping. */}
+          <div className="min-w-0 flex-1">
+            <AddButtons
+              onAddCondition={handleAddCondition}
+              onAddGroup={handleAddGroup}
+              level={level}
+            />
+          </div>
           <Tooltip tooltipText="Remove group">
             <button
               onClick={onRemove}
-              className="transition-colors"
+              className="transition-colors shrink-0"
               style={{ color: "var(--filter-text-muted, #6b7280)" }}
               onMouseEnter={e => e.currentTarget.style.color = "var(--filter-text, #1e293b)"}
               onMouseLeave={e => e.currentTarget.style.color = "var(--filter-text-muted, #6b7280)"}
