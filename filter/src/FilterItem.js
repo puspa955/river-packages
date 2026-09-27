@@ -115,8 +115,11 @@ const FilterItem = ({
   </RichSelect>
 </div>
 
-        {/* Value */}
-        <div className="flex-1 min-w-0">
+        {/* Value — a toggle never needs to stretch the way a select/input
+            does, so it sits compactly right after the operator instead of
+            claiming the row's whole remaining width (which, on a phone's
+            near-full-width popover, stranded it far from the remove button). */}
+        <div className={filterType === "boolean" ? "shrink-0" : "flex-1 min-w-0"}>
           {filterType === "select" && (
             <RichSelect
               options={optionsArray}
